@@ -5,7 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "prepack": "yarn build",
-		"build": "rimraf build && tsc"
+    "build": "rimraf build && tsc",
+    "format": "prettier . --write"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "pinetwork-js"
   ],
   "devDependencies": {
+    "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "typescript": "^4.3.4"
   }
