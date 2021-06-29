@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"strict": true,
+		"target": "ESNext",
+		"lib": ["ESNext", "dom"],
+		"outDir": "build",
+		"declaration": true,
+		"module": "CommonJS"
+	}
+}
