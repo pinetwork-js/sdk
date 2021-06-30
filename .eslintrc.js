@@ -1,6 +1,6 @@
 module.exports = {
 	root: true,
-	plugins: ['@typescript-eslint', 'import', 'sonarjs', 'unicorn'],
+	plugins: ['@typescript-eslint', 'import', 'sonarjs', 'unicorn', 'eslint-plugin-tsdoc'],
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
@@ -170,6 +170,7 @@ module.exports = {
 			files: ['*.ts'],
 			rules: {
 				'@typescript-eslint/explicit-member-accessibility': 'error',
+				'tsdoc/syntax': 'warn',
 			},
 		},
 	],
