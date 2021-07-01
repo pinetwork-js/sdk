@@ -340,13 +340,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pinetwork-js/api-typing@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@pinetwork-js/api-typing@npm:0.2.0"
+  checksum: 34f37ddf384f6fa8522534bee72f81beee820af1765641c03ec62de5540047bc987c259ba91cf59be73ab15a1a82570805f8721a4e8f6b4067cf22fe4ec40266
+  languageName: node
+  linkType: hard
+
 "@pinetwork-js/sdk@workspace:.":
   version: 0.0.0-use.local
   resolution: "@pinetwork-js/sdk@workspace:."
   dependencies:
     "@microsoft/tsdoc": ^0.13.2
+    "@pinetwork-js/api-typing": ^0.2.0
     "@typescript-eslint/eslint-plugin": ^4.28.1
     "@typescript-eslint/parser": ^4.28.1
+    axios: ^0.21.1
     eslint: ^7.29.0
     eslint-config-prettier: ^8.3.0
     eslint-import-resolver-node: ^0.3.4
@@ -600,6 +609,15 @@ __metadata:
   version: 2.0.0
   resolution: "astral-regex@npm:2.0.0"
   checksum: bf049ee7048b70af5473580020f98faf09159af31a7fa5e223099966dc90e9e87760bd34030e19a6dcac05b45614b428f559bd71f027344d123555e524cb95ac
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.21.1":
+  version: 0.21.1
+  resolution: "axios@npm:0.21.1"
+  dependencies:
+    follow-redirects: ^1.10.0
+  checksum: 864fb7b5d077d236737f10adca53bf451a93f35a15271f56fba8da07265a02d26b7d881b935a6697dc6adb0549ea3e56d2eecb403edaa3bb78f6479901c10f69
   languageName: node
   linkType: hard
 
@@ -1329,6 +1347,16 @@ __metadata:
   version: 3.1.1
   resolution: "flatted@npm:3.1.1"
   checksum: 1065cd78294ea651b8c1b96c298a3e70893a23da655e2288e40c06d5d9b1ebce4bd977e604678e01065a92580f3de5078d60d9ee4cdcede9a9989859d7eb5057
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.10.0":
+  version: 1.14.1
+  resolution: "follow-redirects@npm:1.14.1"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 761a18699688b19d66b3e9199ecaf9cd39ede953f3529299c7fca4190b27b855c17c491170977844d5db5e169ffc35ebae999bb0833e9c9c61988d19c20ae7ab
   languageName: node
   linkType: hard
 
