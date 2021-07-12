@@ -2,7 +2,6 @@ import {
 	APIPartialPayment,
 	APIPayment,
 	APIPaymentTransaction,
-	RESTGetRecentPaymentResult,
 	routes,
 } from '@pinetwork-js/api-typing';
 import { MessageType } from '../MessageTypes';
@@ -129,18 +128,12 @@ export class PaymentHandler {
 	 * @param onIncompletePaymentFound - Callback function triggered if an incomplete payment is found
 	 */
 	public static async checkForPendingPayment(onIncompletePaymentFound: (payment: APIPayment) => void): Promise<void> {
-		let recentPayment: RESTGetRecentPaymentResult | undefined;
+		const incompletePayment = await RequestHandler.getInstance().get(routes.getIncompletePayment).catch();
 
-		try {
-			recentPayment = await RequestHandler.getInstance().get(routes.getRecentPayment);
-		} catch {
+		if (!incompletePayment || !incompletePayment.exists || incompletePayment.payment?.status.cancelled) {
 			return;
 		}
 
-		if (!recentPayment || !recentPayment.exists || recentPayment.payment?.status.cancelled) {
-			return;
-		}
-
-		onIncompletePaymentFound(recentPayment.payment!);
+		onIncompletePaymentFound(incompletePayment.payment!);
 	}
 }
