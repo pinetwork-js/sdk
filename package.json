@@ -32,21 +32,21 @@
   ],
   "devDependencies": {
     "@microsoft/tsdoc": "^0.13.2",
-    "@pinetwork-js/api-typing": "^0.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
-    "eslint": "^7.29.0",
+    "@pinetwork-js/api-typing": "^0.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-node": "^0.3.4",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "eslint-plugin-sonarjs": "^0.8.0-125",
+    "eslint-plugin-sonarjs": "^0.9.1",
     "eslint-plugin-tsdoc": "^0.2.14",
-    "eslint-plugin-unicorn": "^34.0.0",
+    "eslint-plugin-unicorn": "^34.0.1",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "axios": "^0.21.1"
