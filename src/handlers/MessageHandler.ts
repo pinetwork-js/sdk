@@ -147,8 +147,27 @@ export class MessageHandler {
 	 */
 	public static emittedPromises: Record<number, PromiseLike> = {};
 
+	/**
+	 * Whether the application is executed in the Pi Network sandbox
+	 */
+	private static sandboxMode = false;
+
 	public constructor() {
 		window.addEventListener('message', (message) => MessageHandler.handleIncomingMessage(message));
+	}
+
+	/**
+	 * @returns the host platform URL of the application
+	 */
+	public static getHostPlatformURL(): string {
+		return MessageHandler.sandboxMode ? 'https://sandbox.minepi.com' : 'https://app-cdn.minepi.com';
+	}
+
+	/**
+	 * @param sandboxMode - True if in sandbox, false otherwhise
+	 */
+	public static setSandboxMode(sandboxMode: boolean): void {
+		MessageHandler.sandboxMode = sandboxMode;
 	}
 
 	/**
@@ -160,8 +179,9 @@ export class MessageHandler {
 	public static sendSDKMessage<M extends Message<M['type']>>(message: M): Promise<SDKMessage<M['type']>> {
 		const id = MessageHandler.lastEmittedId++;
 		const messageToSend = { id, ...message };
+		const hostPlatformURL = MessageHandler.getHostPlatformURL();
 
-		window.parent.postMessage(JSON.stringify(messageToSend), 'https://app-cdn.minepi.com');
+		window.parent.postMessage(JSON.stringify(messageToSend), hostPlatformURL);
 
 		return new Promise((resolve: (message: SDKMessage<M['type']>) => void, reject) => {
 			MessageHandler.emittedPromises[id] = { resolve, reject };

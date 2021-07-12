@@ -9,11 +9,16 @@ import { MessageType } from './MessageTypes';
  */
 const versions = ['2.0'] as const;
 
-interface InitParameters {
+interface ClientInitOptions {
 	/**
 	 * The version of the SDK
 	 */
 	version: typeof versions[number];
+
+	/**
+	 * Whether the application is executed in the Pi Network sandbox
+	 */
+	sandbox?: boolean;
 }
 
 /**
@@ -55,11 +60,16 @@ export class PiClient {
 
 	/**
 	 * Initialize the SDK
-	 * @param param0 - Information to initialize the SDK
+	 *
+	 * @param options - Options to initialize the SDK
 	 */
-	public init({ version }: InitParameters): void {
-		if (!versions.includes(version)) {
+	public init(options: ClientInitOptions): void {
+		if (!versions.includes(options.version)) {
 			throw new Error('Unrecognized version number');
+		}
+
+		if (options.sandbox) {
+			MessageHandler.setSandboxMode(true);
 		}
 
 		this.initialized = true;
