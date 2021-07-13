@@ -152,10 +152,6 @@ export class MessageHandler {
 	 */
 	private static sandboxMode = false;
 
-	public constructor() {
-		window.addEventListener('message', (message) => MessageHandler.handleIncomingMessage(message));
-	}
-
 	/**
 	 * @returns the host platform URL of the application
 	 */
@@ -237,3 +233,5 @@ export class MessageHandler {
 		}
 	}
 }
+
+window.addEventListener('message', (message) => MessageHandler.handleIncomingMessage(message));
