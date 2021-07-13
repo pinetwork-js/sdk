@@ -24,7 +24,7 @@ interface ClientInitOptions {
 /**
  * Available API scopes
  */
-type APIScopes = ['username', 'payments'];
+type APIScopes = ('username' | 'payments')[];
 
 interface AuthResult {
 	/**
