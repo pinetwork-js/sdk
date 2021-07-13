@@ -85,7 +85,7 @@ export class PiClient {
 	public async authenticate(
 		scopes: APIScopes,
 		onIncompletePaymentFound: (payment: APIPayment) => void,
-	): Promise<AuthResult | void> {
+	): Promise<AuthResult> {
 		if (!this.initialized) {
 			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
 		}
@@ -97,7 +97,7 @@ export class PiClient {
 				type: MessageType.SDK_COMMUNICATION_INFORMATION_REQUEST,
 			});
 		} catch {
-			return;
+			throw new Error('Authentication failed.');
 		}
 
 		const applicationInformation = applicationInformationMessage.payload;
