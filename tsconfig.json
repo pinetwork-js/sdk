@@ -3,7 +3,7 @@
 		"moduleResolution": "node",
 		"esModuleInterop": true,
 		"strict": true,
-		"target": "ESNext",
+		"target": "es5",
 		"lib": ["ESNext", "dom"],
 		"outDir": "build",
 		"declaration": true,
