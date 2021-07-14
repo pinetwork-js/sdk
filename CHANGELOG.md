@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.1.0...v0.2.0) (2021-07-14)
+
+
+### Features
+
+* add sandbox support ([#3](https://www.github.com/PiNetwork-js/sdk/issues/3)) ([27a9103](https://www.github.com/PiNetwork-js/sdk/commit/27a9103856e1a8234afc4658c0821d6a23c66b25))
+* add SDKStartPaymentFlow interface ([dfe8a71](https://www.github.com/PiNetwork-js/sdk/commit/dfe8a716d6e3a3bc82f701d2ff96b061218a4345))
+* export AuthResult type ([ee959ef](https://www.github.com/PiNetwork-js/sdk/commit/ee959ef418eb23e460381748b85d679bd89ff9d5))
+
+
+### Bug Fixes
+
+* APIScopes type ([7ae832c](https://www.github.com/PiNetwork-js/sdk/commit/7ae832c95a1ceb75fa3bf0edc333f24865293675))
+* authenticate return's type ([35e68c2](https://www.github.com/PiNetwork-js/sdk/commit/35e68c22df0e82f455c9f844f775dee971102f05))
+* change recent payment to incomplete payment ([#4](https://www.github.com/PiNetwork-js/sdk/issues/4)) ([ef6f231](https://www.github.com/PiNetwork-js/sdk/commit/ef6f231daf48fd77572da3714d0b231a2584e1f4))
+* MessageHandler message listener ([3b4abc7](https://www.github.com/PiNetwork-js/sdk/commit/3b4abc7583dff1486951848d46dfc5077631a647))
+
 ## 0.1.0 (2021-07-01)
 
 
