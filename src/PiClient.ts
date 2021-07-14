@@ -26,7 +26,7 @@ interface ClientInitOptions {
  */
 type APIScopes = ('username' | 'payments')[];
 
-interface AuthResult {
+export interface AuthResult {
 	/**
 	 * The application access token
 	 */
