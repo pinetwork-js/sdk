@@ -57,7 +57,7 @@ export interface Message<T extends MessageType> {
 		: Record<string, never>;
 }
 
-export type SDKApplicationInformation = {
+export interface SDKApplicationInformation {
 	/**
 	 * The application access token
 	 */
@@ -72,7 +72,7 @@ export type SDKApplicationInformation = {
 	 * The application frontend url
 	 */
 	frontendURL: string;
-};
+}
 
 type SDKPreparePaymentFlow =
 	| {
@@ -93,7 +93,14 @@ type SDKPreparePaymentFlow =
 			pendingPayment: APIPayment;
 	  };
 
-type SDKTransaction = {
+interface SDKStartPaymentFlow {
+	/**
+	 * Whether the payment flow started successfully or not
+	 */
+	success: boolean;
+}
+
+interface SDKTransaction {
 	/**
 	 * Whether the transaction has been cancelled or not
 	 */
@@ -108,9 +115,9 @@ type SDKTransaction = {
 	 * The transaction id
 	 */
 	txid: string;
-};
+}
 
-export type SDKMessage<T extends MessageType> = {
+export interface SDKMessage<T extends MessageType> {
 	/**
 	 * The id of the message
 	 */
@@ -123,10 +130,12 @@ export type SDKMessage<T extends MessageType> = {
 		? SDKApplicationInformation
 		: T extends MessageType.PREPARE_PAYMENT_FLOW
 		? SDKPreparePaymentFlow
+		: T extends MessageType.START_PAYMENT_FLOW
+		? SDKStartPaymentFlow
 		: T extends MessageType.WAIT_FOR_TRANSACTION
 		? SDKTransaction
 		: Record<string, never>;
-};
+}
 
 interface PromiseLike {
 	resolve: <T extends MessageType>(message: SDKMessage<T>) => void;
