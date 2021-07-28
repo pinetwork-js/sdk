@@ -1,9 +1,4 @@
-import {
-	APIPartialPayment,
-	APIPayment,
-	APIPaymentTransaction,
-	routes,
-} from '@pinetwork-js/api-typing';
+import { APIPartialPayment, APIPayment, APIPaymentTransaction, routes } from '@pinetwork-js/api-typing';
 import { MessageType } from '../MessageTypes';
 import { MessageHandler, SDKMessage } from './MessageHandler';
 import { RequestHandler } from './RequestHandler';

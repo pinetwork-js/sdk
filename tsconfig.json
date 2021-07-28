@@ -3,10 +3,11 @@
 		"moduleResolution": "node",
 		"esModuleInterop": true,
 		"strict": true,
-		"target": "es5",
+		"target": "ESNext",
 		"lib": ["ESNext", "dom"],
 		"outDir": "build",
 		"declaration": true,
 		"module": "CommonJS"
-	}
+	},
+	"include": ["src/**/*.ts"]
 }
