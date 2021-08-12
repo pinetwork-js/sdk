@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.2.0...v0.3.0) (2021-08-12)
+
+
+### Features
+
+* support for the new scope system ([bd8da41](https://www.github.com/PiNetwork-js/sdk/commit/bd8da41aae422e1d621a7dafb327ff61baffa93e))
+
+
+### Bug Fixes
+
+* getDateTime returns UTC date and time ([242db46](https://www.github.com/PiNetwork-js/sdk/commit/242db465737c1d40924ccbc41ccd1820bdd64740))
+
 ## [0.2.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.1.0...v0.2.0) (2021-07-14)
 
 
