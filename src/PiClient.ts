@@ -24,7 +24,7 @@ interface ClientInitOptions {
 /**
  * Available API scopes
  */
-type APIScopes = ('username' | 'payments')[];
+export type APIScopes = 'username' | 'payments' | 'roles';
 
 export interface AuthResult {
 	/**
@@ -78,23 +78,30 @@ export class PiClient {
 	/**
 	 * Authenticate the user
 	 *
-	 * @param scopes - A list of scopes (not yet implemented)
+	 * @param scopes - The list of requested scopes
 	 * @param onIncompletePaymentFound - Callback function triggered if an incomplete payment is found
 	 * @returns information about the authenticated user
 	 */
 	public async authenticate(
-		scopes: APIScopes,
+		scopes: APIScopes[],
 		onIncompletePaymentFound: (payment: APIPayment) => void,
 	): Promise<AuthResult> {
 		if (!this.initialized) {
 			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
 		}
 
-		let applicationInformationMessage: SDKMessage<MessageType.SDK_COMMUNICATION_INFORMATION_REQUEST>;
+		await MessageHandler.sendSDKMessage({
+			type: MessageType.OPEN_CONSENT_MODAL,
+			payload: {
+				scopes,
+			},
+		});
+
+		let applicationInformationMessage: SDKMessage<MessageType.COMMUNICATION_INFORMATION_REQUEST>;
 
 		try {
 			applicationInformationMessage = await MessageHandler.sendSDKMessage({
-				type: MessageType.SDK_COMMUNICATION_INFORMATION_REQUEST,
+				type: MessageType.COMMUNICATION_INFORMATION_REQUEST,
 			});
 		} catch {
 			throw new Error('Authentication failed.');

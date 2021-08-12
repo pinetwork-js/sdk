@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@microsoft/tsdoc": "^0.13.2",
-		"@pinetwork-js/api-typing": "^0.2.4",
+		"@pinetwork-js/api-typing": "^0.3.0",
 		"@pinetwork-js/eslint-config": "^0.1.1",
 		"@pinetwork-js/mrm-preset": "^0.1.2",
 		"@pinetwork-js/prettier-config": "^0.1.0",

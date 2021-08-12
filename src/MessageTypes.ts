@@ -7,5 +7,6 @@ export enum MessageType {
 	SHOW_PRE_PAYMENT_ERROR = '@pi:app:payments:show_pre_payment_error',
 	START_PAYMENT_FLOW = '@pi:app:payments:start_payment_flow',
 	WAIT_FOR_TRANSACTION = '@pi:app:payments:wait_for_transaction',
-	SDK_COMMUNICATION_INFORMATION_REQUEST = '@pi:app:sdk:communication_information_request',
+	COMMUNICATION_INFORMATION_REQUEST = '@pi:app:sdk:communication_information_request',
+	OPEN_CONSENT_MODAL = '@pi:app:sdk:open_consent_modal',
 }

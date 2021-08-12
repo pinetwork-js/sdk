@@ -3,6 +3,7 @@
 
 import { APIPayment } from '@pinetwork-js/api-typing';
 import { MessageType } from '../MessageTypes';
+import { APIScopes } from '../PiClient';
 
 interface ShareDialogPayload {
 	/**
@@ -37,6 +38,13 @@ interface StartPaymentFlowPayload {
 	paymentId: string;
 }
 
+interface OpenConsentModal {
+	/**
+	 * The requested scopes
+	 */
+	scopes: APIScopes[];
+}
+
 export interface Message<T extends MessageType> {
 	/**
 	 * The type of the message
@@ -54,6 +62,8 @@ export interface Message<T extends MessageType> {
 		? PaymentErrorPayload
 		: T extends MessageType.START_PAYMENT_FLOW
 		? StartPaymentFlowPayload
+		: T extends MessageType.OPEN_CONSENT_MODAL
+		? OpenConsentModal
 		: Record<string, never>;
 }
 
@@ -117,6 +127,13 @@ interface SDKTransaction {
 	txid: string;
 }
 
+interface SDKOpenConsentModal {
+	/**
+	 * Whether the user give his consent for the requested scopes
+	 */
+	success: boolean;
+}
+
 export interface SDKMessage<T extends MessageType> {
 	/**
 	 * The id of the message
@@ -126,7 +143,7 @@ export interface SDKMessage<T extends MessageType> {
 	/**
 	 * The payload of the message
 	 */
-	payload: T extends MessageType.SDK_COMMUNICATION_INFORMATION_REQUEST
+	payload: T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
 		? SDKApplicationInformation
 		: T extends MessageType.PREPARE_PAYMENT_FLOW
 		? SDKPreparePaymentFlow
@@ -134,6 +151,8 @@ export interface SDKMessage<T extends MessageType> {
 		? SDKStartPaymentFlow
 		: T extends MessageType.WAIT_FOR_TRANSACTION
 		? SDKTransaction
+		: T extends MessageType.OPEN_CONSENT_MODAL
+		? SDKOpenConsentModal
 		: Record<string, never>;
 }
 
