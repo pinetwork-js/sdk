@@ -1,61 +1,61 @@
 {
-	"name": "@pinetwork-js/sdk",
-	"description": "Unofficial Pi Network SDK",
-	"version": "0.2.0",
-	"main": "build/index.js",
-	"prettier": "@pinetwork-js/prettier-config",
-	"scripts": {
-		"prepack": "yarn build",
-		"build": "rimraf build && tsc",
-		"lint": "eslint . --ext ts",
-		"lint-fix": "yarn lint --fix",
-		"format": "prettier . --write",
-		"mrm": "mrm --preset @pinetwork-js/mrm-preset"
-	},
-	"author": "Brewal Derouet <brewal_derouet@hotmail.fr>",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/PiNetwork-js/sdk.git"
-	},
-	"homepage": "https://github.com/PiNetwork-js/sdk#readme",
-	"bugs": {
-		"url": "https://github.com/PiNetwork-js/sdk/issues"
-	},
-	"dependencies": {
-		"axios": "^0.21.1"
-	},
-	"devDependencies": {
-		"@microsoft/tsdoc": "^0.13.2",
-		"@pinetwork-js/api-typing": "^0.3.0",
-		"@pinetwork-js/eslint-config": "^0.1.1",
-		"@pinetwork-js/mrm-preset": "^0.1.2",
-		"@pinetwork-js/prettier-config": "^0.1.0",
-		"@types/node": "^16.6.0",
-		"@typescript-eslint/eslint-plugin": "^4.29.1",
-		"@typescript-eslint/parser": "^4.29.1",
-		"eslint": "^7.32.0",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-import-resolver-node": "^0.3.5",
-		"eslint-plugin-import": "^2.24.0",
-		"eslint-plugin-prettier": "^3.4.0",
-		"eslint-plugin-simple-import-sort": "^7.0.0",
-		"eslint-plugin-sonarjs": "^0.9.1",
-		"eslint-plugin-tsdoc": "^0.2.14",
-		"eslint-plugin-unicorn": "^35.0.0",
-		"mrm": "^3.0.8",
-		"prettier": "^2.3.2",
-		"rimraf": "^3.0.2",
-		"typescript": "^4.3.5"
-	},
-	"files": [
-		"build"
-	],
-	"keywords": [
-		"pi",
-		"Pi Network",
-		"sdk",
-		"minepi",
-		"pinetwork-js"
-	]
+  "name": "@pinetwork-js/sdk",
+  "description": "Unofficial Pi Network SDK",
+  "version": "0.3.0",
+  "main": "build/index.js",
+  "prettier": "@pinetwork-js/prettier-config",
+  "scripts": {
+    "prepack": "yarn build",
+    "build": "rimraf build && tsc",
+    "lint": "eslint . --ext ts",
+    "lint-fix": "yarn lint --fix",
+    "format": "prettier . --write",
+    "mrm": "mrm --preset @pinetwork-js/mrm-preset"
+  },
+  "author": "Brewal Derouet <brewal_derouet@hotmail.fr>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PiNetwork-js/sdk.git"
+  },
+  "homepage": "https://github.com/PiNetwork-js/sdk#readme",
+  "bugs": {
+    "url": "https://github.com/PiNetwork-js/sdk/issues"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@microsoft/tsdoc": "^0.13.2",
+    "@pinetwork-js/api-typing": "^0.3.0",
+    "@pinetwork-js/eslint-config": "^0.1.1",
+    "@pinetwork-js/mrm-preset": "^0.1.2",
+    "@pinetwork-js/prettier-config": "^0.1.0",
+    "@types/node": "^16.6.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-node": "^0.3.5",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-sonarjs": "^0.9.1",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "eslint-plugin-unicorn": "^35.0.0",
+    "mrm": "^3.0.8",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "build"
+  ],
+  "keywords": [
+    "pi",
+    "Pi Network",
+    "sdk",
+    "minepi",
+    "pinetwork-js"
+  ]
 }
