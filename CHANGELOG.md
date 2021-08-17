@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.3.1](https://www.github.com/PiNetwork-js/sdk/compare/v0.3.0...v0.3.1) (2021-08-17)
+
+
+### Bug Fixes
+
+* error message when user disallow scopes ([3e35f31](https://www.github.com/PiNetwork-js/sdk/commit/3e35f31d165dee39858d11e5024bf93ca84fe2cd))
+
 ## [0.3.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.2.0...v0.3.0) (2021-08-12)
 
 
