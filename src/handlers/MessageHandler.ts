@@ -127,12 +127,17 @@ interface SDKTransaction {
 	txid: string;
 }
 
-interface SDKOpenConsentModal {
+type SDKOpenConsentModal = {
 	/**
-	 * Whether the user give his consent for the requested scopes
+	 * Whether or not the user gave his consent for the requested scopes
 	 */
-	success: boolean;
-}
+	success?: boolean;
+
+	/**
+	 * Whether or not the user gave his consent for the requested scopes
+	 */
+	cancelled?: boolean;
+};
 
 export interface SDKMessage<T extends MessageType> {
 	/**

@@ -90,12 +90,22 @@ export class PiClient {
 			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
 		}
 
-		await MessageHandler.sendSDKMessage({
-			type: MessageType.OPEN_CONSENT_MODAL,
-			payload: {
-				scopes,
-			},
-		});
+		let scopeConsentResult: SDKMessage<MessageType.OPEN_CONSENT_MODAL>;
+
+		try {
+			scopeConsentResult = await MessageHandler.sendSDKMessage({
+				type: MessageType.OPEN_CONSENT_MODAL,
+				payload: {
+					scopes,
+				},
+			});
+		} catch {
+			throw new Error('User consent cancelled.');
+		}
+
+		if (scopeConsentResult.payload.cancelled) {
+			throw new Error('User consent cancelled.');
+		}
 
 		let applicationInformationMessage: SDKMessage<MessageType.COMMUNICATION_INFORMATION_REQUEST>;
 
