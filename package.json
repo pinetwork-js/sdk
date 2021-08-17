@@ -1,7 +1,7 @@
 {
   "name": "@pinetwork-js/sdk",
   "description": "Unofficial Pi Network SDK",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "build/index.js",
   "prettier": "@pinetwork-js/prettier-config",
   "scripts": {
