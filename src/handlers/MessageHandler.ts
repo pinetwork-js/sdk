@@ -243,7 +243,7 @@ export class MessageHandler {
 			MessageHandler.emittedPromises[parsedData.id].resolve(parsedData);
 			delete MessageHandler.emittedPromises[parsedData.id];
 		} catch (error) {
-			if (parsedData.id === null) {
+			if (parsedData?.id === null) {
 				console.error(
 					// eslint-disable-next-line max-len
 					'Native messaging: error when handling incoming message (possible response?). Error is logged below.',
@@ -260,7 +260,7 @@ export class MessageHandler {
 			console.error(error);
 			console.error(event.data);
 
-			if (parsedData.id in MessageHandler.emittedPromises) {
+			if (parsedData?.id in MessageHandler.emittedPromises) {
 				MessageHandler.emittedPromises[parsedData.id].reject(error);
 			}
 		}
