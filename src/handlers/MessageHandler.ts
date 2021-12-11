@@ -216,8 +216,8 @@ export class MessageHandler {
 			MessageHandler.emittedPromises[id] = { resolve, reject };
 
 			setTimeout(() => {
-				reject(new Error(`Messaging promise with id ${id} timed out after 60000ms.`));
-			}, 6e4);
+				reject(new Error(`Messaging promise with id ${id} timed out after 120000ms.`));
+			}, 120_000);
 		});
 	}
 
