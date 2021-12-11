@@ -205,7 +205,7 @@ export class MessageHandler {
 	 * @param message - The message to send
 	 * @returns the message returned by the Pi Network hosting page
 	 */
-	public static sendSDKMessage<M extends Message<M['type']>>(message: M): Promise<SDKMessage<M['type']>> {
+	public static sendSDKMessage<M extends Message<M['type']>>(message: M): Promise<SDKMessage<M['type']> | void> {
 		const id = MessageHandler.lastEmittedId++;
 		const messageToSend = { id, ...message };
 		const hostPlatformURL = MessageHandler.getHostPlatformURL();
@@ -216,7 +216,9 @@ export class MessageHandler {
 			MessageHandler.emittedPromises[id] = { resolve, reject };
 
 			setTimeout(() => {
-				reject(new Error(`Messaging promise with id ${id} timed out after 120000ms.`));
+				console.error(`Messaging promise with id ${id} timed out after 120000ms.`);
+
+				reject();
 			}, 120_000);
 		});
 	}

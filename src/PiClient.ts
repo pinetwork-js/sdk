@@ -1,5 +1,5 @@
 import { APIPartialPayment, APIPayment, APIUser, routes } from '@pinetwork-js/api-typing';
-import { MessageHandler, SDKMessage } from './handlers/MessageHandler';
+import { MessageHandler } from './handlers/MessageHandler';
 import { PaymentCallbacks, PaymentHandler } from './handlers/PaymentHandler';
 import { RequestHandler } from './handlers/RequestHandler';
 import { MessageType } from './MessageTypes';
@@ -90,30 +90,22 @@ export class PiClient {
 			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
 		}
 
-		let scopeConsentResult: SDKMessage<MessageType.OPEN_CONSENT_MODAL>;
+		const scopeConsentResult = await MessageHandler.sendSDKMessage({
+			type: MessageType.OPEN_CONSENT_MODAL,
+			payload: {
+				scopes,
+			},
+		});
 
-		try {
-			scopeConsentResult = await MessageHandler.sendSDKMessage({
-				type: MessageType.OPEN_CONSENT_MODAL,
-				payload: {
-					scopes,
-				},
-			});
-		} catch {
+		if (!scopeConsentResult || scopeConsentResult.payload.cancelled) {
 			throw new Error('User consent cancelled.');
 		}
 
-		if (scopeConsentResult.payload.cancelled) {
-			throw new Error('User consent cancelled.');
-		}
+		const applicationInformationMessage = await MessageHandler.sendSDKMessage({
+			type: MessageType.COMMUNICATION_INFORMATION_REQUEST,
+		});
 
-		let applicationInformationMessage: SDKMessage<MessageType.COMMUNICATION_INFORMATION_REQUEST>;
-
-		try {
-			applicationInformationMessage = await MessageHandler.sendSDKMessage({
-				type: MessageType.COMMUNICATION_INFORMATION_REQUEST,
-			});
-		} catch {
+		if (!applicationInformationMessage) {
 			throw new Error('Authentication failed.');
 		}
 
@@ -123,13 +115,7 @@ export class PiClient {
 
 		this.onIncompletePaymentFound = onIncompletePaymentFound;
 
-		let user: APIUser | undefined;
-
-		try {
-			user = await this.api.get(routes.getAuthenticatedUser);
-		} catch {
-			throw new Error('Authentication failed.');
-		}
+		const user = await this.api.get(routes.getAuthenticatedUser);
 
 		if (!user || !this.api.accessToken) {
 			throw new Error('Authentication failed.');

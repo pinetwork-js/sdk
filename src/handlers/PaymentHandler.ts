@@ -1,6 +1,6 @@
 import { APIPartialPayment, APIPayment, APIPaymentTransaction, routes } from '@pinetwork-js/api-typing';
 import { MessageType } from '../MessageTypes';
-import { MessageHandler, SDKMessage } from './MessageHandler';
+import { MessageHandler } from './MessageHandler';
 import { RequestHandler } from './RequestHandler';
 
 export interface PaymentCallbacks {
@@ -52,13 +52,11 @@ export class PaymentHandler {
 	 * Run the payment flow
 	 */
 	public async runPaymentFlow(): Promise<void> {
-		let paymentMessage: SDKMessage<MessageType.PREPARE_PAYMENT_FLOW>;
+		const paymentMessage = await MessageHandler.sendSDKMessage({ type: MessageType.PREPARE_PAYMENT_FLOW }).catch(
+			(error) => this.callbacks.onError(error),
+		);
 
-		try {
-			paymentMessage = await MessageHandler.sendSDKMessage({ type: MessageType.PREPARE_PAYMENT_FLOW });
-		} catch (error) {
-			this.callbacks.onError(error);
-
+		if (!paymentMessage) {
 			return;
 		}
 
@@ -71,20 +69,16 @@ export class PaymentHandler {
 			return;
 		}
 
-		let payment: APIPayment | undefined;
+		const payment = await RequestHandler.getInstance()
+			.post(routes.createPayment, this.paymentData)
+			.catch((error) => {
+				MessageHandler.sendSDKMessage({
+					type: MessageType.SHOW_PRE_PAYMENT_ERROR,
+					payload: { paymentError: error.response.data.error },
+				});
 
-		try {
-			payment = await RequestHandler.getInstance().post(routes.createPayment, this.paymentData);
-		} catch (error) {
-			MessageHandler.sendSDKMessage({
-				type: MessageType.SHOW_PRE_PAYMENT_ERROR,
-				payload: { paymentError: error.response.data.error },
+				this.callbacks.onError(error);
 			});
-
-			this.callbacks.onError(error);
-
-			return;
-		}
 
 		if (!payment) {
 			return;
@@ -95,13 +89,11 @@ export class PaymentHandler {
 		MessageHandler.sendSDKMessage({ type: MessageType.START_PAYMENT_FLOW, payload: { paymentId } });
 		this.callbacks.onReadyForServerApproval(paymentId);
 
-		let approvedPaymentMessage: SDKMessage<MessageType.WAIT_FOR_TRANSACTION>;
+		const approvedPaymentMessage = await MessageHandler.sendSDKMessage({
+			type: MessageType.WAIT_FOR_TRANSACTION,
+		}).catch((error) => this.callbacks.onError(error));
 
-		try {
-			approvedPaymentMessage = await MessageHandler.sendSDKMessage({ type: MessageType.WAIT_FOR_TRANSACTION });
-		} catch (error) {
-			this.callbacks.onError(error);
-
+		if (!approvedPaymentMessage) {
 			return;
 		}
 
