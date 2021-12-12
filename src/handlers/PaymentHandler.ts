@@ -1,6 +1,7 @@
 import { APIPartialPayment, APIPayment, APIPaymentTransaction, routes } from '@pinetwork-js/api-typing';
 import { MessageType } from '../MessageTypes';
-import { MessageHandler } from './MessageHandler';
+import { sleep } from '../util';
+import { MessageHandler, PaymentStatus } from './MessageHandler';
 import { RequestHandler } from './RequestHandler';
 
 export interface PaymentCallbacks {
@@ -29,6 +30,11 @@ export interface PaymentCallbacks {
  * Handler for payments
  */
 export class PaymentHandler {
+	/**
+	 * Number of retries allowed
+	 */
+	public retryCounter = 5;
+
 	public constructor(
 		/**
 		 * Information about the payment
@@ -46,6 +52,25 @@ export class PaymentHandler {
 		public readonly onIncompletePaymentFound: (payment: APIPayment) => void,
 	) {
 		this.runPaymentFlow();
+	}
+
+	public async retryableCallback(retryCallback: () => void, paymentStatus: PaymentStatus): Promise<void> {
+		retryCallback();
+
+		await sleep(10_000);
+
+		const decideCallbackRetrial = await MessageHandler.sendSDKMessage({
+			type: MessageType.DECIDE_CALLBACK_RETRIAL,
+			payload: { targetStatus: paymentStatus },
+		});
+
+		if (decideCallbackRetrial && decideCallbackRetrial.payload.retry && this.retryCounter > 0) {
+			this.retryCounter--;
+
+			return this.retryableCallback(retryCallback, paymentStatus);
+		}
+
+		this.retryCounter = 5;
 	}
 
 	/**
@@ -87,7 +112,10 @@ export class PaymentHandler {
 		const paymentId = payment.identifier;
 
 		MessageHandler.sendSDKMessage({ type: MessageType.START_PAYMENT_FLOW, payload: { paymentId } });
-		this.callbacks.onReadyForServerApproval(paymentId);
+
+		this.retryableCallback(() => {
+			this.callbacks.onReadyForServerApproval(paymentId);
+		}, 'developerApproved');
 
 		const approvedPaymentMessage = await MessageHandler.sendSDKMessage({
 			type: MessageType.WAIT_FOR_TRANSACTION,
@@ -103,10 +131,12 @@ export class PaymentHandler {
 			return;
 		}
 
-		this.callbacks.onReadyForServerCompletion(
-			approvedPaymentMessage.payload.paymentId,
-			approvedPaymentMessage.payload.txid,
-		);
+		this.retryableCallback(() => {
+			this.callbacks.onReadyForServerCompletion(
+				approvedPaymentMessage.payload.paymentId,
+				approvedPaymentMessage.payload.txid,
+			);
+		}, 'developerCompleted');
 	}
 
 	/**

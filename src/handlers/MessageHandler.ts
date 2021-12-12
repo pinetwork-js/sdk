@@ -45,6 +45,15 @@ interface OpenConsentModal {
 	scopes: APIScopes[];
 }
 
+export type PaymentStatus = 'developerApproved' | 'developerCompleted';
+
+interface DecidalCallbackRetrialPayload {
+	/**
+	 * The status of the payment concerned by the retry request
+	 */
+	targetStatus: PaymentStatus;
+}
+
 export interface Message<T extends MessageType> {
 	/**
 	 * The type of the message
@@ -64,6 +73,8 @@ export interface Message<T extends MessageType> {
 		? StartPaymentFlowPayload
 		: T extends MessageType.OPEN_CONSENT_MODAL
 		? OpenConsentModal
+		: T extends MessageType.DECIDE_CALLBACK_RETRIAL
+		? DecidalCallbackRetrialPayload
 		: Record<string, never>;
 }
 
@@ -148,6 +159,13 @@ interface SDKCheckNativeFeatures {
 	features: NativeFeature[];
 }
 
+interface SDKDecidalCallbackRetrial {
+	/**
+	 * Whether or not a retry has been granted
+	 */
+	retry: boolean;
+}
+
 export interface SDKMessage<T extends MessageType> {
 	/**
 	 * The id of the message
@@ -169,6 +187,8 @@ export interface SDKMessage<T extends MessageType> {
 		? SDKOpenConsentModal
 		: T extends MessageType.CHECK_NATIVE_FEATURES
 		? SDKCheckNativeFeatures
+		: T extends MessageType.DECIDE_CALLBACK_RETRIAL
+		? SDKDecidalCallbackRetrial
 		: Record<string, never>;
 }
 

@@ -10,4 +10,5 @@ export enum MessageType {
 	COMMUNICATION_INFORMATION_REQUEST = '@pi:app:sdk:communication_information_request',
 	OPEN_CONSENT_MODAL = '@pi:app:sdk:open_consent_modal',
 	CHECK_NATIVE_FEATURES = '@pi:app:sdk:check_native_features',
+	DECIDE_CALLBACK_RETRIAL = '@pi:app:sdk:decide_callback_retrial',
 }
