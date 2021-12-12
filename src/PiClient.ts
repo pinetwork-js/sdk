@@ -173,4 +173,23 @@ export class PiClient {
 			payload: { conversationId },
 		});
 	}
+
+	/**
+	 * Get the list of the native feature available in client platform
+	 *
+	 * @returns the list of native features available in client platform
+	 */
+	public async nativeFeaturesList() {
+		if (!this.initialized) {
+			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
+		}
+
+		const nativeFeaturesList = await MessageHandler.sendSDKMessage({ type: MessageType.CHECK_NATIVE_FEATURES });
+
+		if (!nativeFeaturesList) {
+			return [];
+		}
+
+		return nativeFeaturesList.payload.features;
+	}
 }

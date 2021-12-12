@@ -139,6 +139,15 @@ type SDKOpenConsentModal = {
 	cancelled?: boolean;
 };
 
+type NativeFeature = 'inline_media';
+
+interface SDKCheckNativeFeatures {
+	/**
+	 * List of native features available in client platform
+	 */
+	features: NativeFeature[];
+}
+
 export interface SDKMessage<T extends MessageType> {
 	/**
 	 * The id of the message
@@ -158,6 +167,8 @@ export interface SDKMessage<T extends MessageType> {
 		? SDKTransaction
 		: T extends MessageType.OPEN_CONSENT_MODAL
 		? SDKOpenConsentModal
+		: T extends MessageType.CHECK_NATIVE_FEATURES
+		? SDKCheckNativeFeatures
 		: Record<string, never>;
 }
 
