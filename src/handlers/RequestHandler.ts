@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { MessageType } from '../MessageTypes';
 
 import { getDateTime } from '../util/getTime';
-import { Message, SDKApplicationInformation } from './MessageHandler';
+import { RequestMessage, CommunicationInformationResponsePayload } from './MessageHandler';
 
 interface NetworkError {
 	/**
@@ -83,7 +83,7 @@ export class RequestHandler {
 	 *
 	 * @param applicationInformation - The application information
 	 */
-	public init(applicationInformation: SDKApplicationInformation): void {
+	public init(applicationInformation: CommunicationInformationResponsePayload): void {
 		this.accessToken = applicationInformation.accessToken;
 		this.backendURL = applicationInformation.backendURL;
 		this.frontendURL = applicationInformation.frontendURL;
@@ -168,7 +168,7 @@ export class RequestHandler {
 	 *
 	 * @param message - The message to send
 	 */
-	public sendMessageToPiNetwork<M extends Message<M['type']>>(message: M): void {
+	public sendMessageToPiNetwork<M extends RequestMessage<M['type']>>(message: M): void {
 		if (!this.frontendURL) {
 			return;
 		}
@@ -182,7 +182,7 @@ export class RequestHandler {
 	 * @param awaitedMessage - The awaited message
 	 * @returns The expected message if received before timeout
 	 */
-	public waitForAction<M extends Message<M['type']>>(awaitedMessage: M): Promise<M> {
+	public waitForAction<M extends RequestMessage<M['type']>>(awaitedMessage: M): Promise<M> {
 		return new Promise((resolve, reject) => {
 			const timeout = window.setTimeout(() => {
 				reject('timeout');
@@ -209,7 +209,10 @@ export class RequestHandler {
 	 * @param awaitedMessage - The expected message
 	 * @returns The data of the received message if it match the expected one
 	 */
-	public handlePiNetworkMessage<M extends Message<M['type']>>(event: MessageEvent, awaitedMessage: M): any | void {
+	public handlePiNetworkMessage<M extends RequestMessage<M['type']>>(
+		event: MessageEvent,
+		awaitedMessage: M,
+	): any | void {
 		let parsedData: any;
 
 		try {

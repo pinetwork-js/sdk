@@ -5,7 +5,7 @@ import { APIPayment } from '@pinetwork-js/api-typing';
 import { MessageType } from '../MessageTypes';
 import { APIScopes } from '../PiClient';
 
-interface ShareDialogPayload {
+interface OpenShareDialogRequestPayload {
 	/**
 	 * The title of the shared message
 	 */
@@ -17,28 +17,28 @@ interface ShareDialogPayload {
 	sharingMessage: string;
 }
 
-interface ConversationPayload {
+interface OpenAppConversationRequestPayload {
 	/**
 	 * The conversation id
 	 */
 	conversationId: number;
 }
 
-interface PaymentErrorPayload {
+interface ShowPrePaymentErrorRequestPayload {
 	/**
 	 * The payment error
 	 */
 	paymentError: any;
 }
 
-interface StartPaymentFlowPayload {
+interface StartPaymentFlowRequestPayload {
 	/**
 	 * The payment id
 	 */
 	paymentId: string;
 }
 
-interface OpenConsentModal {
+interface OpenConsentModalRequestPayload {
 	/**
 	 * The requested scopes
 	 */
@@ -47,38 +47,44 @@ interface OpenConsentModal {
 
 export type PaymentStatus = 'developerApproved' | 'developerCompleted';
 
-interface DecidalCallbackRetrialPayload {
+interface DecidalCallbackRetrialRequestPayload {
 	/**
 	 * The status of the payment concerned by the retry request
 	 */
 	targetStatus: PaymentStatus;
 }
 
-export interface Message<T extends MessageType> {
+type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_APP_CONVERSATION_WITH_ID
+	? OpenAppConversationRequestPayload
+	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
+	? OpenShareDialogRequestPayload
+	: T extends MessageType.SHOW_PRE_PAYMENT_ERROR
+	? ShowPrePaymentErrorRequestPayload
+	: T extends MessageType.START_PAYMENT_FLOW
+	? StartPaymentFlowRequestPayload
+	: T extends MessageType.OPEN_CONSENT_MODAL
+	? OpenConsentModalRequestPayload
+	: T extends MessageType.DECIDE_CALLBACK_RETRIAL
+	? DecidalCallbackRetrialRequestPayload
+	: void;
+
+interface BaseRequestMessage {
 	/**
 	 * The type of the message
 	 */
 	type: MessageType;
-
-	/**
-	 * The payload of the message
-	 */
-	payload?: T extends MessageType.OPEN_APP_CONVERSATION_WITH_ID
-		? ConversationPayload
-		: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
-		? ShareDialogPayload
-		: T extends MessageType.SHOW_PRE_PAYMENT_ERROR
-		? PaymentErrorPayload
-		: T extends MessageType.START_PAYMENT_FLOW
-		? StartPaymentFlowPayload
-		: T extends MessageType.OPEN_CONSENT_MODAL
-		? OpenConsentModal
-		: T extends MessageType.DECIDE_CALLBACK_RETRIAL
-		? DecidalCallbackRetrialPayload
-		: Record<string, never>;
 }
 
-export interface SDKApplicationInformation {
+export type RequestMessage<T extends MessageType> = RequestMessagePayload<T> extends void
+	? BaseRequestMessage
+	: BaseRequestMessage & {
+			/**
+			 * The payload of the message
+			 */
+			payload: RequestMessagePayload<T>;
+	  };
+
+export interface CommunicationInformationResponsePayload {
 	/**
 	 * The application access token
 	 */
@@ -95,7 +101,7 @@ export interface SDKApplicationInformation {
 	frontendURL: string;
 }
 
-type SDKPreparePaymentFlow =
+type PreparePaymentFlowResponsePayload =
 	| {
 			/**
 			 * Whether there is a pending transaction or not
@@ -114,14 +120,14 @@ type SDKPreparePaymentFlow =
 			pendingPayment: APIPayment;
 	  };
 
-interface SDKStartPaymentFlow {
+interface StartPaymentFlowResponsePayload {
 	/**
 	 * Whether the payment flow started successfully or not
 	 */
 	success: boolean;
 }
 
-interface SDKTransaction {
+interface WaitForTransactionResponsePayload {
 	/**
 	 * Whether the transaction has been cancelled or not
 	 */
@@ -138,7 +144,7 @@ interface SDKTransaction {
 	txid: string;
 }
 
-type SDKOpenConsentModal = {
+type OpenConsentModalResponsePayload = {
 	/**
 	 * Whether or not the user gave his consent for the requested scopes
 	 */
@@ -152,48 +158,54 @@ type SDKOpenConsentModal = {
 
 type NativeFeature = 'inline_media';
 
-interface SDKCheckNativeFeatures {
+interface CheckNativeFeaturesResponsePayload {
 	/**
 	 * List of native features available in client platform
 	 */
 	features: NativeFeature[];
 }
 
-interface SDKDecidalCallbackRetrial {
+interface DecidalCallbackRetrialResponsePayload {
 	/**
 	 * Whether or not a retry has been granted
 	 */
 	retry: boolean;
 }
 
-export interface SDKMessage<T extends MessageType> {
+type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
+	? CommunicationInformationResponsePayload
+	: T extends MessageType.PREPARE_PAYMENT_FLOW
+	? PreparePaymentFlowResponsePayload
+	: T extends MessageType.START_PAYMENT_FLOW
+	? StartPaymentFlowResponsePayload
+	: T extends MessageType.WAIT_FOR_TRANSACTION
+	? WaitForTransactionResponsePayload
+	: T extends MessageType.OPEN_CONSENT_MODAL
+	? OpenConsentModalResponsePayload
+	: T extends MessageType.CHECK_NATIVE_FEATURES
+	? CheckNativeFeaturesResponsePayload
+	: T extends MessageType.DECIDE_CALLBACK_RETRIAL
+	? DecidalCallbackRetrialResponsePayload
+	: void;
+
+interface BaseResponseMessage {
 	/**
 	 * The id of the message
 	 */
 	id: number;
-
-	/**
-	 * The payload of the message
-	 */
-	payload: T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
-		? SDKApplicationInformation
-		: T extends MessageType.PREPARE_PAYMENT_FLOW
-		? SDKPreparePaymentFlow
-		: T extends MessageType.START_PAYMENT_FLOW
-		? SDKStartPaymentFlow
-		: T extends MessageType.WAIT_FOR_TRANSACTION
-		? SDKTransaction
-		: T extends MessageType.OPEN_CONSENT_MODAL
-		? SDKOpenConsentModal
-		: T extends MessageType.CHECK_NATIVE_FEATURES
-		? SDKCheckNativeFeatures
-		: T extends MessageType.DECIDE_CALLBACK_RETRIAL
-		? SDKDecidalCallbackRetrial
-		: Record<string, never>;
 }
 
+export type ResponseMessage<T extends MessageType> = ResponseMessagePayload<T> extends void
+	? BaseResponseMessage
+	: BaseResponseMessage & {
+			/**
+			 * The payload of the message
+			 */
+			payload: ResponseMessagePayload<T>;
+	  };
+
 interface PromiseLike {
-	resolve: <T extends MessageType>(message: SDKMessage<T>) => void;
+	resolve: <T extends MessageType>(message: ResponseMessage<T>) => void;
 	reject: (reason?: any) => void;
 }
 
@@ -236,14 +248,16 @@ export class MessageHandler {
 	 * @param message - The message to send
 	 * @returns the message returned by the Pi Network hosting page
 	 */
-	public static sendSDKMessage<M extends Message<M['type']>>(message: M): Promise<SDKMessage<M['type']> | void> {
+	public static sendSDKMessage<M extends RequestMessage<M['type']>>(
+		message: M,
+	): Promise<ResponseMessage<M['type']> | void> {
 		const id = MessageHandler.lastEmittedId++;
 		const messageToSend = { id, ...message };
 		const hostPlatformURL = MessageHandler.getHostPlatformURL();
 
 		window.parent.postMessage(JSON.stringify(messageToSend), hostPlatformURL);
 
-		return new Promise((resolve: (message: SDKMessage<M['type']>) => void, reject) => {
+		return new Promise((resolve: (message: ResponseMessage<M['type']>) => void, reject) => {
 			MessageHandler.emittedPromises[id] = { resolve, reject };
 
 			setTimeout(() => {
