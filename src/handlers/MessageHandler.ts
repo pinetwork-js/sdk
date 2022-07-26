@@ -266,5 +266,7 @@ export class MessageHandler {
 		}
 	}
 }
+if(typeof window !== 'undefined'){
 
 window.addEventListener('message', (message) => MessageHandler.handleIncomingMessage(message));
+}
