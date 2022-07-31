@@ -57,5 +57,6 @@
     "sdk",
     "minepi",
     "pinetwork-js"
-  ]
+  ],
+  "packageManager": "yarn@3.2.2"
 }
