@@ -9,5 +9,5 @@
 		"declaration": true,
 		"module": "CommonJS"
 	},
-	"include": ["src/**/*.ts"]
+	"include": ["src"]
 }

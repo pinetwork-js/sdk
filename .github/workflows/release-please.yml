@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
@@ -12,26 +13,30 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
+          default-branch: main
           pull-request-title-pattern: "chore${scope}: release${component} v${version}"
           bump-minor-pre-major: true
-          default-branch: main
           changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug
             Fixes"},{"type":"perf","section":"Performance
             Improvements"},{"type":"deps","section":"Dependencies"},{"type":"revert","section":"Reverts"},{"type":"docs","section":"Documentation"},{"type":"style","section":"Styles","hidden":true},{"type":"chore","section":"Miscellaneous
             Chores","hidden":true},{"type":"refactor","section":"Code
             Refactoring","hidden":true},{"type":"test","section":"Tests","hidden":true},{"type":"ci","section":"Continuous
             Integration","hidden":true}]'
+
       - uses: actions/checkout@v2
         if: ${{ steps.release.outputs.release_created }}
-      - name: Use Node.js v15.0.0
+
+      - name: Use Node.js v18
         uses: actions/setup-node@v2
         with:
-          node-version: 15.0.0
+          node-version: "18"
           registry-url: https://registry.npmjs.org
         if: ${{ steps.release.outputs.release_created }}
+
       - name: Install dependencies
         run: yarn install --immutable
         if: ${{ steps.release.outputs.release_created }}
+
       - name: Publish to NPM
         run: yarn npm publish --access public
         env:

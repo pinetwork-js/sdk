@@ -2,7 +2,6 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - "*"
       - main
     paths-ignore:
       - "*.{md,txt}"
@@ -19,23 +18,28 @@ on:
       - LICENSE
       - .*config
       - .vscode
+
 jobs:
   main:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version:
-          - "15"
           - "16"
+          - "18"
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js v${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies
         run: yarn install --immutable
-      - name: Lint
-        run: yarn lint
+
       - name: Build
         run: yarn build --noEmit
+
+      - name: Lint
+        run: yarn lint
