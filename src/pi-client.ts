@@ -98,9 +98,7 @@ export class PiClient {
 		scopes: APIScopes[],
 		onIncompletePaymentFound: (payment: APIPayment) => void,
 	): Promise<AuthResult> {
-		if (!this.initialized) {
-			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
-		}
+		this.checkInitialized();
 
 		if (!scopes.every((scope) => availableScopes.has(scope))) {
 			throw new Error("Invalid scopes found. Please check the scopes you're requesting again.");
@@ -152,9 +150,7 @@ export class PiClient {
 	 * @returns the payment handler for the created payment
 	 */
 	public createPayment(paymentData: APIPartialPayment, callbacks: PaymentCallbacks): PaymentHandler {
-		if (!this.initialized) {
-			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
-		}
+		this.checkInitialized();
 
 		if (!this.consentedScopes.includes('payments')) {
 			throw new Error('Cannot create a payment without "payments" scope');
@@ -170,9 +166,7 @@ export class PiClient {
 	 * @param sharingMessage - The message to share
 	 */
 	public openShareDialog(title: string, sharingMessage: string): void {
-		if (!this.initialized) {
-			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
-		}
+		this.checkInitialized();
 
 		MessageHandler.sendSDKMessage({
 			type: MessageType.OPEN_SHARE_DIALOG_ACTION,
@@ -186,9 +180,7 @@ export class PiClient {
 	 * @param conversationId - The conversation id
 	 */
 	public openConversation(conversationId: number): void {
-		if (!this.initialized) {
-			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
-		}
+		this.checkInitialized();
 
 		MessageHandler.sendSDKMessage({
 			type: MessageType.OPEN_APP_CONVERSATION_WITH_ID,
@@ -202,9 +194,7 @@ export class PiClient {
 	 * @returns the list of native features available in client platform
 	 */
 	public async nativeFeaturesList() {
-		if (!this.initialized) {
-			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
-		}
+		this.checkInitialized();
 
 		const nativeFeaturesList = await MessageHandler.sendSDKMessage({ type: MessageType.CHECK_NATIVE_FEATURES });
 
@@ -236,5 +226,16 @@ export class PiClient {
 				lastTrackingRequestTimestamp = Date.now();
 			});
 		}
+	}
+
+	/**
+	 * Check if the SDK client has been initialized before use
+	 */
+	private checkInitialized(): void {
+		if (this.initialized) {
+			return;
+		}
+
+		throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
 	}
 }
