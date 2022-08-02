@@ -1,4 +1,4 @@
-import type { APIPartialPayment, APIPayment, APIUser } from '@pinetwork-js/api-typing/payloads';
+import type { APIPartialPayment, APIPayment, APIUser, APIUserScopes } from '@pinetwork-js/api-typing/payloads';
 import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing/routes';
 import type { PaymentCallbacks } from './handlers';
 import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
@@ -8,6 +8,11 @@ import { MessageType } from './message-types';
  * Available SDK versions
  */
 const versions = ['2.0'] as const;
+
+/**
+ * Available Pi Platform API scopes
+ */
+const availableScopes = new Set(['payments', 'username', 'roles', 'platform'] as APIUserScopes[]);
 
 interface ClientInitOptions {
 	/**
@@ -53,6 +58,11 @@ export class PiClient {
 	public api = RequestHandler.getInstance();
 
 	/**
+	 * The list of scopes consented by the user
+	 */
+	public consentedScopes: APIUserScopes[] = [];
+
+	/**
 	 * Callback function triggered if an incomplete payment is found during the process of
 	 * authentication or payment creation
 	 */
@@ -92,6 +102,10 @@ export class PiClient {
 			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
 		}
 
+		if (!scopes.every((scope) => availableScopes.has(scope))) {
+			throw new Error("Invalid scopes found. Please check the scopes you're requesting again.");
+		}
+
 		const scopeConsentResult = await MessageHandler.sendSDKMessage({
 			type: MessageType.OPEN_CONSENT_MODAL,
 			payload: {
@@ -125,6 +139,8 @@ export class PiClient {
 
 		PaymentHandler.checkForPendingPayment(onIncompletePaymentFound);
 
+		this.consentedScopes = user.credentials.scopes;
+
 		return { user, accessToken: this.api.accessToken };
 	}
 
@@ -138,6 +154,10 @@ export class PiClient {
 	public createPayment(paymentData: APIPartialPayment, callbacks: PaymentCallbacks): PaymentHandler {
 		if (!this.initialized) {
 			throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
+		}
+
+		if (!this.consentedScopes.includes('payments')) {
+			throw new Error('Cannot create a payment without "payments" scope');
 		}
 
 		return new PaymentHandler(paymentData, callbacks, this.onIncompletePaymentFound);
