@@ -1,5 +1,5 @@
 import type { APIPartialPayment, APIPayment, APIUser } from '@pinetwork-js/api-typing/payloads';
-import { getAuthenticatedUser } from '@pinetwork-js/api-typing/routes';
+import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing/routes';
 import type { PaymentCallbacks } from './handlers';
 import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
 import { MessageType } from './message-types';
@@ -71,6 +71,8 @@ export class PiClient {
 		if (options.sandbox) {
 			MessageHandler.setSandboxMode(true);
 		}
+
+		this.initTracking();
 
 		this.initialized = true;
 	}
@@ -191,5 +193,28 @@ export class PiClient {
 		}
 
 		return nativeFeaturesList.payload.features;
+	}
+
+	/**
+	 * Initialize the usage tracking system
+	 */
+	private initTracking(): void {
+		this.api.post(trackUsage, {});
+
+		let lastTrackingRequestTimestamp = Date.now();
+		const events = ['click', 'scroll', 'mousemove', 'touchend', 'change'];
+
+		for (const event of events) {
+			/* eslint-disable-next-line @typescript-eslint/no-loop-func */
+			document.addEventListener(event, () => {
+				if (Date.now() - lastTrackingRequestTimestamp < 15_000) {
+					return;
+				}
+
+				this.api.post(trackUsage, {});
+
+				lastTrackingRequestTimestamp = Date.now();
+			});
+		}
 	}
 }
