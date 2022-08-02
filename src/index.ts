@@ -1,6 +1,6 @@
-import { PiClient } from './PiClient';
+import { PiClient } from './pi-client';
 
 export const Pi = new PiClient();
 
 export * from './handlers';
-export * from './PiClient';
+export * from './pi-client';

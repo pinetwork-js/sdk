@@ -1,2 +1,2 @@
-export { getDateTime } from './getTime';
+export { getDateTime } from './get-time';
 export { sleep } from './sleep';

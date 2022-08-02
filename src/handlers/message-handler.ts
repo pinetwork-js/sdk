@@ -1,9 +1,6 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-/* eslint-disable @typescript-eslint/indent */
-
-import { APIPayment } from '@pinetwork-js/api-typing';
-import { MessageType } from '../MessageTypes';
-import { APIScopes } from '../PiClient';
+import type { APIPayment } from '@pinetwork-js/api-typing/payloads';
+import type { MessageType } from '../message-types';
+import type { APIScopes } from '../pi-client';
 
 interface OpenShareDialogRequestPayload {
 	/**
@@ -144,7 +141,7 @@ interface WaitForTransactionResponsePayload {
 	txid: string;
 }
 
-type OpenConsentModalResponsePayload = {
+interface OpenConsentModalResponsePayload {
 	/**
 	 * Whether or not the user gave his consent for the requested scopes
 	 */
@@ -154,7 +151,7 @@ type OpenConsentModalResponsePayload = {
 	 * Whether or not the user gave his consent for the requested scopes
 	 */
 	cancelled?: boolean;
-};
+}
 
 type NativeFeature = 'inline_media';
 
@@ -250,7 +247,7 @@ export class MessageHandler {
 	 */
 	public static sendSDKMessage<M extends RequestMessage<M['type']>>(
 		message: M,
-	): Promise<ResponseMessage<M['type']> | void> {
+	): Promise<ResponseMessage<M['type']> | undefined> {
 		const id = MessageHandler.lastEmittedId++;
 		const messageToSend = { id, ...message };
 		const hostPlatformURL = MessageHandler.getHostPlatformURL();

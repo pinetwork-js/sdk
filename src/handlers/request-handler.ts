@@ -1,9 +1,11 @@
-import { RoutePayload, RouteResult, Route } from '@pinetwork-js/api-typing';
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import { MessageType } from '../MessageTypes';
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 
-import { getDateTime } from '../util/getTime';
-import { RequestMessage, CommunicationInformationResponsePayload } from './MessageHandler';
+import type { Route, RoutePayload, RouteResult } from '@pinetwork-js/api-typing/routes';
+import type { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import { MessageType } from '../message-types';
+import { getDateTime } from '../util/get-time';
+import type { CommunicationInformationResponsePayload, RequestMessage } from './message-handler';
 
 interface NetworkError {
 	/**
@@ -70,12 +72,23 @@ export class RequestHandler {
 	}
 
 	/**
+	 * Get options for axios API requests
+	 *
+	 * @returns The API request options
+	 */
+	public get options(): AxiosRequestConfig {
+		return {
+			headers: this.accessToken ? { Authorization: `Bearer ${this.accessToken}` } : {},
+		};
+	}
+
+	/**
 	 * Get the instance of the request handler or create a new one if not found
 	 *
 	 * @returns the instance of the request handler
 	 */
 	public static getInstance(): RequestHandler {
-		return RequestHandler.instance ? RequestHandler.instance : new RequestHandler();
+		return RequestHandler.instance ?? new RequestHandler();
 	}
 
 	/**
@@ -91,14 +104,6 @@ export class RequestHandler {
 		this.createAxios();
 	}
 
-	private createAxios(): void {
-		if (!this.backendURL) {
-			return;
-		}
-
-		this.axiosClient = axios.create({ baseURL: this.backendURL, timeout: 20_000 });
-	}
-
 	/**
 	 * Handle axios request error
 	 *
@@ -110,17 +115,6 @@ export class RequestHandler {
 		this.sendMessageToPiNetwork({
 			type: errorCode !== 401 && errorCode !== 403 ? MessageType.UNKNOWN_ERROR : MessageType.AUTH_ERROR,
 		});
-	}
-
-	/**
-	 * Get options for axios API requests
-	 *
-	 * @returns The API request options
-	 */
-	public get options(): AxiosRequestConfig {
-		return {
-			headers: this.accessToken ? { Authorization: 'Bearer ' + this.accessToken } : {},
-		};
 	}
 
 	/**
@@ -138,7 +132,11 @@ export class RequestHandler {
 			.get(route, this.options)
 			.catch((error: AxiosError) => this.handleError(error));
 
-		return response && response.data;
+		if (!response) {
+			return;
+		}
+
+		return response.data;
 	}
 
 	/**
@@ -148,10 +146,7 @@ export class RequestHandler {
 	 * @param payload - The data to post
 	 * @returns The result of the request if no error occurred
 	 */
-	public async post<T extends Route<any, undefined>>(
-		route: T,
-		payload: RoutePayload<T>,
-	): Promise<RouteResult<T> | undefined> {
+	public async post<T extends Route<any>>(route: T, payload: RoutePayload<T>): Promise<RouteResult<T> | undefined> {
 		if (!this.axiosClient) {
 			return;
 		}
@@ -160,7 +155,11 @@ export class RequestHandler {
 			.post(route, payload, this.options)
 			.catch((error: AxiosError) => this.handleError(error));
 
-		return response && response.data;
+		if (!response) {
+			return;
+		}
+
+		return response.data;
 	}
 
 	/**
@@ -185,7 +184,7 @@ export class RequestHandler {
 	public waitForAction<M extends RequestMessage<M['type']>>(awaitedMessage: M): Promise<M> {
 		return new Promise((resolve, reject) => {
 			const timeout = window.setTimeout(() => {
-				reject('timeout');
+				reject(new Error('timeout'));
 			}, 60_000);
 
 			window.addEventListener('message', (event) => {
@@ -210,10 +209,10 @@ export class RequestHandler {
 	 * @returns The data of the received message if it match the expected one
 	 */
 	public handlePiNetworkMessage<M extends RequestMessage<M['type']>>(
-		event: MessageEvent,
+		event: MessageEvent<string>,
 		awaitedMessage: M,
-	): any | void {
-		let parsedData: any;
+	): M | undefined {
+		let parsedData: M | undefined;
 
 		try {
 			parsedData = JSON.parse(event.data);
@@ -250,5 +249,13 @@ export class RequestHandler {
 				data,
 			},
 		});
+	}
+
+	private createAxios(): void {
+		if (!this.backendURL) {
+			return;
+		}
+
+		this.axiosClient = axios.create({ baseURL: this.backendURL, timeout: 20_000 });
 	}
 }

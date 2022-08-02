@@ -1,3 +1,3 @@
-export * from './MessageHandler';
-export * from './PaymentHandler';
-export * from './RequestHandler';
+export * from './message-handler';
+export * from './payment-handler';
+export * from './request-handler';

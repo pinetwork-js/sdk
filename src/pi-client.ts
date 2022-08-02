@@ -1,8 +1,8 @@
-import { APIPartialPayment, APIPayment, APIUser, routes } from '@pinetwork-js/api-typing';
-import { MessageHandler } from './handlers/MessageHandler';
-import { PaymentCallbacks, PaymentHandler } from './handlers/PaymentHandler';
-import { RequestHandler } from './handlers/RequestHandler';
-import { MessageType } from './MessageTypes';
+import type { APIPartialPayment, APIPayment, APIUser } from '@pinetwork-js/api-typing/payloads';
+import { getAuthenticatedUser } from '@pinetwork-js/api-typing/routes';
+import type { PaymentCallbacks } from './handlers';
+import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
+import { MessageType } from './message-types';
 
 /**
  * Available SDK versions
@@ -24,7 +24,7 @@ interface ClientInitOptions {
 /**
  * Available API scopes
  */
-export type APIScopes = 'username' | 'payments' | 'roles';
+export type APIScopes = 'payments' | 'roles' | 'username';
 
 export interface AuthResult {
 	/**
@@ -115,7 +115,7 @@ export class PiClient {
 
 		this.onIncompletePaymentFound = onIncompletePaymentFound;
 
-		const user = await this.api.get(routes.getAuthenticatedUser);
+		const user = await this.api.get(getAuthenticatedUser);
 
 		if (!user || !this.api.accessToken) {
 			throw new Error('Authentication failed.');

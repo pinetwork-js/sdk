@@ -1,8 +1,10 @@
-import { APIPartialPayment, APIPayment, APIPaymentTransaction, routes } from '@pinetwork-js/api-typing';
-import { MessageType } from '../MessageTypes';
+import type { APIPartialPayment, APIPayment, APIPaymentTransaction } from '@pinetwork-js/api-typing/payloads';
+import { createPayment, getIncompletePayment } from '@pinetwork-js/api-typing/routes';
+import { MessageType } from '../message-types';
 import { sleep } from '../util';
-import { MessageHandler, PaymentStatus } from './MessageHandler';
-import { RequestHandler } from './RequestHandler';
+import type { PaymentStatus } from './message-handler';
+import { MessageHandler } from './message-handler';
+import { RequestHandler } from './request-handler';
 
 export interface PaymentCallbacks {
 	/**
@@ -54,6 +56,21 @@ export class PaymentHandler {
 		this.runPaymentFlow();
 	}
 
+	/**
+	 * Check if there is a pending payment
+	 *
+	 * @param onIncompletePaymentFound - Callback function triggered if an incomplete payment is found
+	 */
+	public static async checkForPendingPayment(onIncompletePaymentFound: (payment: APIPayment) => void): Promise<void> {
+		const incompletePayment = await RequestHandler.getInstance().get(getIncompletePayment).catch();
+
+		if (!incompletePayment || !incompletePayment.exists || incompletePayment.payment?.status.cancelled) {
+			return;
+		}
+
+		onIncompletePaymentFound(incompletePayment.payment!);
+	}
+
 	public async retryableCallback(retryCallback: () => void, paymentStatus: PaymentStatus): Promise<void> {
 		retryCallback();
 
@@ -64,7 +81,7 @@ export class PaymentHandler {
 			payload: { targetStatus: paymentStatus },
 		});
 
-		if (decideCallbackRetrial && decideCallbackRetrial.payload.retry && this.retryCounter > 0) {
+		if (decideCallbackRetrial?.payload.retry && this.retryCounter > 0) {
 			this.retryCounter--;
 
 			return this.retryableCallback(retryCallback, paymentStatus);
@@ -95,7 +112,7 @@ export class PaymentHandler {
 		}
 
 		const payment = await RequestHandler.getInstance()
-			.post(routes.createPayment, this.paymentData)
+			.post(createPayment, this.paymentData)
 			.catch((error) => {
 				MessageHandler.sendSDKMessage({
 					type: MessageType.SHOW_PRE_PAYMENT_ERROR,
@@ -137,20 +154,5 @@ export class PaymentHandler {
 				approvedPaymentMessage.payload.txid,
 			);
 		}, 'developerCompleted');
-	}
-
-	/**
-	 * Check if there is a pending payment
-	 *
-	 * @param onIncompletePaymentFound - Callback function triggered if an incomplete payment is found
-	 */
-	public static async checkForPendingPayment(onIncompletePaymentFound: (payment: APIPayment) => void): Promise<void> {
-		const incompletePayment = await RequestHandler.getInstance().get(routes.getIncompletePayment).catch();
-
-		if (!incompletePayment || !incompletePayment.exists || incompletePayment.payment?.status.cancelled) {
-			return;
-		}
-
-		onIncompletePaymentFound(incompletePayment.payment!);
 	}
 }
