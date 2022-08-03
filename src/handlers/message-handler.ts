@@ -164,7 +164,7 @@ interface OpenConsentModalResponsePayload {
 	cancelled?: boolean;
 }
 
-type NativeFeature = 'inline_media';
+type NativeFeature = 'inline_media' | 'request_permission';
 
 interface CheckNativeFeaturesResponsePayload {
 	/**
