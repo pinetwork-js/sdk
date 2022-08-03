@@ -2,7 +2,7 @@ import type { APIPartialPayment, APIPayment, APIPaymentTransaction } from '@pine
 import { createPayment, getIncompletePayment } from '@pinetwork-js/api-typing/routes';
 import { MessageType } from '../message-types';
 import { sleep } from '../util';
-import type { PaymentStatus } from './message-handler';
+import type { Network, PaymentStatus } from './message-handler';
 import { MessageHandler } from './message-handler';
 import { RequestHandler } from './request-handler';
 
@@ -38,6 +38,11 @@ export class PaymentHandler {
 	public retryCounter = 5;
 
 	public constructor(
+		/**
+		 * The network to which the application is connected
+		 */
+		public readonly connectedNetwork: Network,
+
 		/**
 		 * Information about the payment
 		 */
@@ -94,9 +99,10 @@ export class PaymentHandler {
 	 * Run the payment flow
 	 */
 	public async runPaymentFlow(): Promise<void> {
-		const paymentMessage = await MessageHandler.sendSDKMessage({ type: MessageType.PREPARE_PAYMENT_FLOW }).catch(
-			(error) => this.callbacks.onError(error),
-		);
+		const paymentMessage = await MessageHandler.sendSDKMessage({
+			type: MessageType.PREPARE_PAYMENT_FLOW,
+			payload: { connectedNetwork: this.connectedNetwork },
+		}).catch((error) => this.callbacks.onError(error));
 
 		if (!paymentMessage) {
 			return;
@@ -104,6 +110,11 @@ export class PaymentHandler {
 
 		if (paymentMessage.payload.pending) {
 			const { pendingPayment } = paymentMessage.payload;
+
+			MessageHandler.sendSDKMessage({
+				type: MessageType.SHOW_PRE_PAYMENT_ERROR,
+				payload: { paymentError: 'pending_check_failed' },
+			});
 
 			this.callbacks.onError(new Error('A pending payment needs to be handled.'), pendingPayment);
 			this.onIncompletePaymentFound(pendingPayment);

@@ -21,6 +21,15 @@ interface OpenAppConversationRequestPayload {
 	conversationId: number;
 }
 
+export type Network = 'Pi Network' | 'Pi Testnet';
+
+interface PreparePaymentFlowRequestPayload {
+	/**
+	 * The network to which the application is connected
+	 */
+	connectedNetwork: Network;
+}
+
 interface ShowPrePaymentErrorRequestPayload {
 	/**
 	 * The payment error
@@ -55,6 +64,8 @@ type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_A
 	? OpenAppConversationRequestPayload
 	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
 	? OpenShareDialogRequestPayload
+	: T extends MessageType.PREPARE_PAYMENT_FLOW
+	? PreparePaymentFlowRequestPayload
 	: T extends MessageType.SHOW_PRE_PAYMENT_ERROR
 	? ShowPrePaymentErrorRequestPayload
 	: T extends MessageType.START_PAYMENT_FLOW
@@ -169,6 +180,13 @@ interface DecidalCallbackRetrialResponsePayload {
 	retry: boolean;
 }
 
+interface GetConnectNetworkResponsePayload {
+	/**
+	 * The network to which the application is connected
+	 */
+	network: Network;
+}
+
 type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
 	? CommunicationInformationResponsePayload
 	: T extends MessageType.PREPARE_PAYMENT_FLOW
@@ -183,6 +201,8 @@ type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMU
 	? CheckNativeFeaturesResponsePayload
 	: T extends MessageType.DECIDE_CALLBACK_RETRIAL
 	? DecidalCallbackRetrialResponsePayload
+	: T extends MessageType.GET_CONNECT_NETWORK
+	? GetConnectNetworkResponsePayload
 	: void;
 
 interface BaseResponseMessage {

@@ -1,6 +1,6 @@
 import type { APIPartialPayment, APIPayment, APIUser, APIUserScopes } from '@pinetwork-js/api-typing/payloads';
 import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing/routes';
-import type { PaymentCallbacks } from './handlers';
+import type { Network, PaymentCallbacks } from './handlers';
 import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
 import { MessageType } from './message-types';
 
@@ -63,6 +63,11 @@ export class PiClient {
 	public consentedScopes: APIUserScopes[] = [];
 
 	/**
+	 * The network to which the application is connected
+	 */
+	public connectedNetwork?: Network;
+
+	/**
 	 * Callback function triggered if an incomplete payment is found during the process of
 	 * authentication or payment creation
 	 */
@@ -73,7 +78,7 @@ export class PiClient {
 	 *
 	 * @param options - Options to initialize the SDK
 	 */
-	public init(options: ClientInitOptions): void {
+	public async init(options: ClientInitOptions): Promise<void> {
 		if (!versions.includes(options.version)) {
 			throw new Error('Unrecognized version number');
 		}
@@ -85,6 +90,7 @@ export class PiClient {
 		this.initTracking();
 
 		this.initialized = true;
+		this.connectedNetwork = await this.getConnectedNetwork();
 	}
 
 	/**
@@ -156,7 +162,11 @@ export class PiClient {
 			throw new Error('Cannot create a payment without "payments" scope');
 		}
 
-		return new PaymentHandler(paymentData, callbacks, this.onIncompletePaymentFound);
+		if (!this.connectedNetwork) {
+			throw new Error('Connected network cannot be found');
+		}
+
+		return new PaymentHandler(this.connectedNetwork, paymentData, callbacks, this.onIncompletePaymentFound);
 	}
 
 	/**
@@ -237,5 +247,18 @@ export class PiClient {
 		}
 
 		throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
+	}
+
+	/**
+	 * Get the network to which the application is connected
+	 */
+	private async getConnectedNetwork(): Promise<Network | undefined> {
+		const connectedNetworkMessage = await MessageHandler.sendSDKMessage({ type: MessageType.GET_CONNECT_NETWORK });
+
+		if (!connectedNetworkMessage) {
+			return;
+		}
+
+		return connectedNetworkMessage.payload.network;
 	}
 }
