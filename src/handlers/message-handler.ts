@@ -272,6 +272,8 @@ export class MessageHandler {
 		const messageToSend = { id, ...message };
 		const hostPlatformURL = MessageHandler.getHostPlatformURL();
 
+		console.log(`Sending message to app platform (target origin: ${hostPlatformURL}):`, messageToSend);
+
 		window.parent.postMessage(JSON.stringify(messageToSend), hostPlatformURL);
 
 		return new Promise((resolve: (message: ResponseMessage<M['type']>) => void, reject) => {
@@ -294,11 +296,19 @@ export class MessageHandler {
 		let parsedData: any;
 
 		try {
+			if (typeof event.data !== 'string') {
+				console.log('Received message with non-string data:', event.data);
+
+				return;
+			}
+
 			parsedData = JSON.parse(event.data);
 
 			if (parsedData.id === null) {
 				throw new Error('No id found in message response');
 			}
+
+			console.log(`Received response for message id ${parsedData.id}:`, parsedData);
 
 			if (!(parsedData.id in MessageHandler.emittedPromises)) {
 				throw new Error(`No emitted promise found for native messaging response id ${parsedData.id}`);

@@ -112,6 +112,8 @@ export class RequestHandler {
 	public handleError(error: AxiosError): void {
 		const errorCode = error.response?.status;
 
+		console.error(error);
+
 		this.sendMessageToPiNetwork({
 			type: errorCode !== 401 && errorCode !== 403 ? MessageType.UNKNOWN_ERROR : MessageType.AUTH_ERROR,
 		});
@@ -183,6 +185,8 @@ export class RequestHandler {
 	 */
 	public waitForAction<M extends RequestMessage<M['type']>>(awaitedMessage: M): Promise<M> {
 		return new Promise((resolve, reject) => {
+			console.log('Waiting for action...');
+
 			const timeout = window.setTimeout(() => {
 				reject(new Error('timeout'));
 			}, 60_000);
@@ -221,6 +225,8 @@ export class RequestHandler {
 
 			return;
 		}
+
+		console.log('Message!', parsedData);
 
 		if (!parsedData) {
 			console.warn('Unable to parse action');
