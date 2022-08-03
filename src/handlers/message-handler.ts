@@ -341,4 +341,6 @@ export class MessageHandler {
 	}
 }
 
-window.addEventListener('message', (message) => MessageHandler.handleIncomingMessage(message));
+if (typeof window !== 'undefined') {
+	window.addEventListener('message', (message) => MessageHandler.handleIncomingMessage(message));
+}
