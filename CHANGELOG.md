@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.3.1...v0.4.0) (2022-08-03)
+
+
+### Features
+
+* add checks for valid and consented scopes ([f8a9e2d](https://www.github.com/PiNetwork-js/sdk/commit/f8a9e2d97bcbe5c1e7f2ad5157bfae0982f1c9a1))
+* add nativeFeaturesList method ([446a595](https://www.github.com/PiNetwork-js/sdk/commit/446a5956ef843b2b6e05bfb8cf18c3d679f87bbd))
+* add request_permission native feature ([c427eef](https://www.github.com/PiNetwork-js/sdk/commit/c427eeff904fbb47172329b22f1e123d462df99a))
+* add retryableCallback method ([662512f](https://www.github.com/PiNetwork-js/sdk/commit/662512f8c7bbe9b74387888be33e990873c27eaa))
+* add usage tracking system ([d66d09a](https://www.github.com/PiNetwork-js/sdk/commit/d66d09aa9b0f6921c8b73c03b60ba2cf28efa25a))
+* get connected network ([a24fe6e](https://www.github.com/PiNetwork-js/sdk/commit/a24fe6edfd46ad48c8542fd1eacc9618a7204224))
+* set SDK message timeout to 120000ms ([4b072ca](https://www.github.com/PiNetwork-js/sdk/commit/4b072caafcc290f933b6514df2dcbef3651b5c47))
+
+
+### Bug Fixes
+
+* add check to avoid "window is undefined" error ([ec37df0](https://www.github.com/PiNetwork-js/sdk/commit/ec37df0a83533fc93b4d3bb4e589321c7c37c457))
+* better sendSDKMessage error handling ([290361c](https://www.github.com/PiNetwork-js/sdk/commit/290361cddcf4e951c16d0999c9d29bc72f02f503))
+* ESLint and Typescript errors ([5f5318b](https://www.github.com/PiNetwork-js/sdk/commit/5f5318bcf6ea2b200092bb80630c9ecf70f577f5))
+
 ### [0.3.1](https://www.github.com/PiNetwork-js/sdk/compare/v0.3.0...v0.3.1) (2021-08-17)
 
 
