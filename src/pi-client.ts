@@ -1,6 +1,12 @@
-import type { APIPartialPayment, APIPayment, APIUser, APIUserScopes } from '@pinetwork-js/api-typing/payloads';
-import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing/routes';
-import type { Network, PaymentCallbacks } from './handlers';
+import type {
+	APIPartialPayment,
+	APIPayment,
+	APIPaymentNetwork,
+	APIUser,
+	APIUserScopes,
+} from '@pinetwork-js/api-typing';
+import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing';
+import type { PaymentCallbacks } from './handlers';
 import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
 import { MessageType } from './message-types';
 
@@ -12,24 +18,19 @@ const versions = ['2.0'] as const;
 /**
  * Available Pi Platform API scopes
  */
-const availableScopes = new Set(['payments', 'username', 'roles', 'platform'] as APIUserScopes[]);
+const availableScopes = new Set(['payments', 'username', 'roles', 'platform', 'wallet_address'] as APIUserScopes[]);
 
 interface ClientInitOptions {
 	/**
 	 * The version of the SDK
 	 */
-	version: typeof versions[number];
+	version: (typeof versions)[number];
 
 	/**
 	 * Whether the application is executed in the Pi Network sandbox
 	 */
 	sandbox?: boolean;
 }
-
-/**
- * Available API scopes
- */
-export type APIScopes = 'payments' | 'roles' | 'username';
 
 export interface AuthResult {
 	/**
@@ -65,7 +66,7 @@ export class PiClient {
 	/**
 	 * The network to which the application is connected
 	 */
-	public connectedNetwork?: Network;
+	public connectedNetwork?: APIPaymentNetwork;
 
 	/**
 	 * Callback function triggered if an incomplete payment is found during the process of
@@ -101,7 +102,7 @@ export class PiClient {
 	 * @returns information about the authenticated user
 	 */
 	public async authenticate(
-		scopes: APIScopes[],
+		scopes: APIUserScopes[],
 		onIncompletePaymentFound: (payment: APIPayment) => void,
 	): Promise<AuthResult> {
 		this.checkInitialized();
@@ -252,7 +253,7 @@ export class PiClient {
 	/**
 	 * Get the network to which the application is connected
 	 */
-	private async getConnectedNetwork(): Promise<Network | undefined> {
+	private async getConnectedNetwork(): Promise<APIPaymentNetwork | undefined> {
 		const connectedNetworkMessage = await MessageHandler.sendSDKMessage({ type: MessageType.GET_CONNECT_NETWORK });
 
 		if (!connectedNetworkMessage) {

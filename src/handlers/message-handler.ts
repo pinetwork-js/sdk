@@ -1,6 +1,5 @@
-import type { APIPayment } from '@pinetwork-js/api-typing/payloads';
+import type { APIPayment, APIPaymentNetwork, APIUserScopes } from '@pinetwork-js/api-typing';
 import type { MessageType } from '../message-types';
-import type { APIScopes } from '../pi-client';
 
 interface OpenShareDialogRequestPayload {
 	/**
@@ -21,13 +20,11 @@ interface OpenAppConversationRequestPayload {
 	conversationId: number;
 }
 
-export type Network = 'Pi Network' | 'Pi Testnet';
-
 interface PreparePaymentFlowRequestPayload {
 	/**
 	 * The network to which the application is connected
 	 */
-	connectedNetwork: Network;
+	connectedNetwork: APIPaymentNetwork;
 }
 
 interface ShowPrePaymentErrorRequestPayload {
@@ -48,7 +45,7 @@ interface OpenConsentModalRequestPayload {
 	/**
 	 * The requested scopes
 	 */
-	scopes: APIScopes[];
+	scopes: APIUserScopes[];
 }
 
 export type PaymentStatus = 'developerApproved' | 'developerCompleted';
@@ -184,7 +181,7 @@ interface GetConnectNetworkResponsePayload {
 	/**
 	 * The network to which the application is connected
 	 */
-	network: Network;
+	network: APIPaymentNetwork;
 }
 
 type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMUNICATION_INFORMATION_REQUEST

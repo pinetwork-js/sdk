@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
-		"moduleResolution": "NodeNext",
+		"moduleResolution": "node",
 		"esModuleInterop": true,
 		"strict": true,
-		"target": "ES5",
+		"target": "ESNext",
 		"lib": ["dom"],
 		"outDir": "build",
 		"declaration": true,

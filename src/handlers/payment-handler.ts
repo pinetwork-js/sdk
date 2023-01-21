@@ -1,8 +1,8 @@
-import type { APIPartialPayment, APIPayment, APIPaymentTransaction } from '@pinetwork-js/api-typing/payloads';
-import { createPayment, getIncompletePayment } from '@pinetwork-js/api-typing/routes';
+import type { APIPartialPayment, APIPayment, APIPaymentNetwork, APIPaymentTransaction } from '@pinetwork-js/api-typing';
+import { createPayment, getIncompleteClientPayment } from '@pinetwork-js/api-typing';
 import { MessageType } from '../message-types';
 import { sleep } from '../util';
-import type { Network, PaymentStatus } from './message-handler';
+import type { PaymentStatus } from './message-handler';
 import { MessageHandler } from './message-handler';
 import { RequestHandler } from './request-handler';
 
@@ -41,7 +41,7 @@ export class PaymentHandler {
 		/**
 		 * The network to which the application is connected
 		 */
-		public readonly connectedNetwork: Network,
+		public readonly connectedNetwork: APIPaymentNetwork,
 
 		/**
 		 * Information about the payment
@@ -67,9 +67,9 @@ export class PaymentHandler {
 	 * @param onIncompletePaymentFound - Callback function triggered if an incomplete payment is found
 	 */
 	public static async checkForPendingPayment(onIncompletePaymentFound: (payment: APIPayment) => void): Promise<void> {
-		const incompletePayment = await RequestHandler.getInstance().get(getIncompletePayment).catch();
+		const incompletePayment = await RequestHandler.getInstance().get(getIncompleteClientPayment).catch();
 
-		if (!incompletePayment || !incompletePayment.exists || incompletePayment.payment?.status.cancelled) {
+		if (!incompletePayment?.exists || incompletePayment.payment.status.cancelled) {
 			return;
 		}
 

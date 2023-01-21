@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
-
-import type { Route, RoutePayload, RouteResult } from '@pinetwork-js/api-typing/routes';
-import type { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import type { Route, RoutePayload, RouteResult } from '@pinetwork-js/api-typing';
+import type { AxiosError, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import { MessageType } from '../message-types';
 import { getDateTime } from '../util/get-time';
@@ -76,7 +74,7 @@ export class RequestHandler {
 	 *
 	 * @returns The API request options
 	 */
-	public get options(): AxiosRequestConfig {
+	public get options(): RawAxiosRequestConfig {
 		return {
 			headers: this.accessToken ? { Authorization: `Bearer ${this.accessToken}` } : {},
 		};
