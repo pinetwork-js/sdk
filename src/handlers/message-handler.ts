@@ -57,6 +57,13 @@ interface DecidalCallbackRetrialRequestPayload {
 	targetStatus: PaymentStatus;
 }
 
+interface CopyTextFromTPAPayload {
+	/**
+	 * The text to copy
+	 */
+	text: string;
+}
+
 type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_APP_CONVERSATION_WITH_ID
 	? OpenAppConversationRequestPayload
 	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
@@ -71,6 +78,8 @@ type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_A
 	? OpenConsentModalRequestPayload
 	: T extends MessageType.DECIDE_CALLBACK_RETRIAL
 	? DecidalCallbackRetrialRequestPayload
+	: T extends MessageType.COPY_TEXT_FROM_TPA
+	? CopyTextFromTPAPayload
 	: void;
 
 interface BaseRequestMessage {
@@ -184,6 +193,13 @@ interface GetConnectNetworkResponsePayload {
 	network: APIPaymentNetwork;
 }
 
+interface CopyTextFromTPAResponsePayload {
+	/**
+	 * Whether or not the text was successfully copied
+	 */
+	success: boolean;
+}
+
 type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
 	? CommunicationInformationResponsePayload
 	: T extends MessageType.PREPARE_PAYMENT_FLOW
@@ -200,6 +216,8 @@ type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMU
 	? DecidalCallbackRetrialResponsePayload
 	: T extends MessageType.GET_CONNECT_NETWORK
 	? GetConnectNetworkResponsePayload
+	: T extends MessageType.COPY_TEXT_FROM_TPA
+	? CopyTextFromTPAResponsePayload
 	: void;
 
 interface BaseResponseMessage {

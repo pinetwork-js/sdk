@@ -217,6 +217,17 @@ export class PiClient {
 	}
 
 	/**
+	 * Copy given text to user clipboard
+	 *
+	 * @param text - The text to copy
+	 */
+	public async copyText(text: string) {
+		this.checkInitialized();
+
+		await MessageHandler.sendSDKMessage({ type: MessageType.COPY_TEXT_FROM_TPA, payload: { text } });
+	}
+
+	/**
 	 * Initialize the usage tracking system
 	 */
 	private initTracking(): void {

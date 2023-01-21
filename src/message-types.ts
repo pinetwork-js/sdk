@@ -12,4 +12,5 @@ export enum MessageType {
 	CHECK_NATIVE_FEATURES = '@pi:app:sdk:check_native_features',
 	DECIDE_CALLBACK_RETRIAL = '@pi:app:sdk:decide_callback_retrial',
 	GET_CONNECT_NETWORK = '@pi:app:sdk:get_connected_network',
+	COPY_TEXT_FROM_TPA = '@pi:app:sdk:copy_text_from_tpa',
 }
