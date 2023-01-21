@@ -13,7 +13,7 @@
 		"format:check": "prettier 'src/**/**.{js,ts}' --check",
 		"mrm": "mrm --preset @pinetwork-js/mrm-preset"
 	},
-	"packageManager": "yarn@3.2.2",
+	"packageManager": "yarn@3.3.1",
 	"author": "Brewal Derouet <brewal_derouet@hotmail.fr>",
 	"license": "MIT",
 	"repository": {
