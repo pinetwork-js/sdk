@@ -64,6 +64,15 @@ interface CopyTextFromTPAPayload {
 	text: string;
 }
 
+export type Permission = 'camera';
+
+interface RequestNativePermissionPayload {
+	/**
+	 * The native permission to request
+	 */
+	permission: Permission;
+}
+
 type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_APP_CONVERSATION_WITH_ID
 	? OpenAppConversationRequestPayload
 	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
@@ -80,6 +89,8 @@ type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_A
 	? DecidalCallbackRetrialRequestPayload
 	: T extends MessageType.COPY_TEXT_FROM_TPA
 	? CopyTextFromTPAPayload
+	: T extends MessageType.REQUEST_NATIVE_PERMISSION
+	? RequestNativePermissionPayload
 	: void;
 
 interface BaseRequestMessage {
@@ -200,6 +211,13 @@ interface CopyTextFromTPAResponsePayload {
 	success: boolean;
 }
 
+interface RequestNativePermissionResponsePayload {
+	/**
+	 * Whether or not the requested permission has been granted
+	 */
+	granted: boolean | null;
+}
+
 type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
 	? CommunicationInformationResponsePayload
 	: T extends MessageType.PREPARE_PAYMENT_FLOW
@@ -218,6 +236,8 @@ type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMU
 	? GetConnectNetworkResponsePayload
 	: T extends MessageType.COPY_TEXT_FROM_TPA
 	? CopyTextFromTPAResponsePayload
+	: T extends MessageType.REQUEST_NATIVE_PERMISSION
+	? RequestNativePermissionResponsePayload
 	: void;
 
 interface BaseResponseMessage {

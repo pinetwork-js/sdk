@@ -6,7 +6,7 @@ import type {
 	APIUserScopes,
 } from '@pinetwork-js/api-typing';
 import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing';
-import type { PaymentCallbacks } from './handlers';
+import type { PaymentCallbacks, Permission } from './handlers';
 import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
 import { MessageType } from './message-types';
 
@@ -225,6 +225,23 @@ export class PiClient {
 		this.checkInitialized();
 
 		await MessageHandler.sendSDKMessage({ type: MessageType.COPY_TEXT_FROM_TPA, payload: { text } });
+	}
+
+	/**
+	 * Request for a permission to the user
+	 *
+	 * @param permission - The permission to request
+	 * @returns Whether or not the requested permission has been granted
+	 */
+	public async requestPermission(permission: Permission) {
+		this.checkInitialized();
+
+		const requestPermissionResponse = await MessageHandler.sendSDKMessage({
+			type: MessageType.REQUEST_NATIVE_PERMISSION,
+			payload: { permission },
+		});
+
+		return !!requestPermissionResponse?.payload.granted;
 	}
 
 	/**
