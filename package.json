@@ -14,7 +14,7 @@
 	},
 	"packageManager": "yarn@3.3.1",
 	"author": "Brewal Derouet <brewal_derouet@hotmail.fr>",
-	"license": "MIT",
+	"license": "PiOS",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/PiNetwork-js/sdk.git"
