@@ -155,10 +155,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pinetwork-js/api-typing@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "@pinetwork-js/api-typing@npm:0.5.0"
-  checksum: cab1ab79067bf0d224292d6fd7465d658e86100a1fe466046caa504b180f0c9cad24e21e6c97948a45871e31a77628e4f2087969c4f33a78358403af9a1463a9
+"@pinetwork-js/api-typing@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "@pinetwork-js/api-typing@npm:0.5.1"
+  checksum: bdfc12228ae8506cd3ca71f023c6354b13bb969d3cc721760d605c7d4a99fc53effed437056b076af0e063e3c7ada3abed5713e5bca62369264a835a9e3f20f4
   languageName: node
   linkType: hard
 
@@ -199,7 +199,7 @@ __metadata:
   resolution: "@pinetwork-js/sdk@workspace:."
   dependencies:
     "@microsoft/tsdoc": ^0.14.2
-    "@pinetwork-js/api-typing": ^0.5.0
+    "@pinetwork-js/api-typing": ^0.5.1
     "@pinetwork-js/eslint-config": ^0.2.0
     "@pinetwork-js/prettier-config": ^0.1.0
     "@types/node": ^18.11.18

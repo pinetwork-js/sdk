@@ -1,5 +1,5 @@
 import type { APIPartialPayment, APIPayment, APIPaymentNetwork, APIPaymentTransaction } from '@pinetwork-js/api-typing';
-import { createPayment, getIncompleteClientPayment } from '@pinetwork-js/api-typing';
+import { createUserToAppPayment, getIncompleteClientPayment } from '@pinetwork-js/api-typing';
 import { MessageType } from '../message-types';
 import { sleep } from '../util';
 import type { PaymentStatus } from './message-handler';
@@ -46,7 +46,7 @@ export class PaymentHandler {
 		/**
 		 * Information about the payment
 		 */
-		public readonly paymentData: APIPartialPayment,
+		public readonly paymentData: Omit<APIPartialPayment, 'uid'>,
 
 		/**
 		 * Callback functions for the payment process
@@ -123,7 +123,7 @@ export class PaymentHandler {
 		}
 
 		const payment = await RequestHandler.getInstance()
-			.post(createPayment, this.paymentData)
+			.post(createUserToAppPayment, this.paymentData)
 			.catch((error) => {
 				MessageHandler.sendSDKMessage({
 					type: MessageType.SHOW_PRE_PAYMENT_ERROR,
