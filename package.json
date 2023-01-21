@@ -6,12 +6,11 @@
 	"prettier": "@pinetwork-js/prettier-config",
 	"scripts": {
 		"prepack": "yarn build",
-		"build": "rimraf build && tsc",
+		"build": "tsc --build --clean && tsc",
 		"lint": "eslint 'src/**/**.{js,ts}'",
 		"lint:fix": "eslint 'src/**/**.{js,ts}' --fix",
 		"format": "prettier 'src/**/**.{js,ts}' --write",
-		"format:check": "prettier 'src/**/**.{js,ts}' --check",
-		"mrm": "mrm --preset @pinetwork-js/mrm-preset"
+		"format:check": "prettier 'src/**/**.{js,ts}' --check"
 	},
 	"packageManager": "yarn@3.3.1",
 	"author": "Brewal Derouet <brewal_derouet@hotmail.fr>",
@@ -25,29 +24,26 @@
 		"url": "https://github.com/PiNetwork-js/sdk/issues"
 	},
 	"dependencies": {
-		"axios": "^0.27.2"
+		"axios": "^1.2.3"
 	},
 	"devDependencies": {
-		"@microsoft/tsdoc": "^0.14.1",
-		"@pinetwork-js/api-typing": "^0.4.0",
+		"@microsoft/tsdoc": "^0.14.2",
+		"@pinetwork-js/api-typing": "^0.5.0",
 		"@pinetwork-js/eslint-config": "^0.2.0",
-		"@pinetwork-js/mrm-preset": "^0.2.1",
 		"@pinetwork-js/prettier-config": "^0.1.0",
-		"@types/node": "^18.6.3",
-		"@typescript-eslint/eslint-plugin": "^5.31.0",
-		"@typescript-eslint/parser": "^5.31.0",
-		"eslint": "^8.21.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-import-resolver-node": "^0.3.6",
-		"eslint-plugin-import": "^2.26.0",
+		"@types/node": "^18.11.18",
+		"@typescript-eslint/eslint-plugin": "^5.48.2",
+		"@typescript-eslint/parser": "^5.48.2",
+		"eslint": "^8.32.0",
+		"eslint-config-prettier": "^8.6.0",
+		"eslint-import-resolver-node": "^0.3.7",
+		"eslint-plugin-import": "^2.27.5",
 		"eslint-plugin-prettier": "^4.2.1",
-		"eslint-plugin-sonarjs": "^0.14.0",
-		"eslint-plugin-tsdoc": "^0.2.16",
-		"eslint-plugin-unicorn": "^43.0.2",
-		"mrm": "^4.0.0",
-		"prettier": "^2.7.1",
-		"rimraf": "^3.0.2",
-		"typescript": "^4.7.4"
+		"eslint-plugin-sonarjs": "^0.18.0",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"eslint-plugin-unicorn": "^45.0.2",
+		"prettier": "^2.8.3",
+		"typescript": "^4.9.4"
 	},
 	"files": [
 		"build"
