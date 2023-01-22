@@ -24,7 +24,7 @@ interface NetworkError {
 	/**
 	 * Some information returned by the error
 	 */
-	data: any;
+	data: unknown;
 }
 
 interface RESTPostNetworkErrorJSONBody {
@@ -123,20 +123,22 @@ export class RequestHandler {
 	 * @param route - The URL of the GET request
 	 * @returns The result of the request if no error occurred
 	 */
-	public async get<T extends Route<any>>(route: T): Promise<RouteResult<T> | undefined> {
+	public async get<T extends Route<unknown>>(route: T): Promise<RouteResult<T> | undefined> {
 		if (!this.axiosClient) {
 			return;
 		}
 
-		const response = await this.axiosClient
-			.get(route, this.options)
-			.catch((error: AxiosError) => this.handleError(error));
+		try {
+			const { data } = await this.axiosClient.get(route, this.options);
 
-		if (!response) {
-			return;
+			return data;
+		} catch (error) {
+			if (this.isAxiosError(error)) {
+				this.handleError(error);
+
+				throw error;
+			}
 		}
-
-		return response.data;
 	}
 
 	/**
@@ -146,20 +148,22 @@ export class RequestHandler {
 	 * @param payload - The data to post
 	 * @returns The result of the request if no error occurred
 	 */
-	public async post<T extends Route<any>>(route: T, payload: RoutePayload<T>): Promise<RouteResult<T> | undefined> {
+	public async post<T extends Route<unknown>>(route: T, payload: RoutePayload<T>): Promise<RouteResult<T> | undefined> {
 		if (!this.axiosClient) {
 			return;
 		}
 
-		const response = await this.axiosClient
-			.post(route, payload, this.options)
-			.catch((error: AxiosError) => this.handleError(error));
+		try {
+			const { data } = await this.axiosClient.post(route, payload, this.options);
 
-		if (!response) {
-			return;
+			return data;
+		} catch (error) {
+			if (this.isAxiosError(error)) {
+				this.handleError(error);
+
+				throw error;
+			}
 		}
-
-		return response.data;
 	}
 
 	/**
@@ -244,7 +248,7 @@ export class RequestHandler {
 	 * @param message - A message about the error
 	 * @param data - Some informations returned by the error
 	 */
-	public reportError(action: string, message: string, data?: any): void {
+	public reportError(action: string, message: string, data?: unknown): void {
 		this.post(postNetworkError, {
 			error: {
 				time: getDateTime(),
@@ -261,5 +265,9 @@ export class RequestHandler {
 		}
 
 		this.axiosClient = axios.create({ baseURL: this.backendURL, timeout: 20_000 });
+	}
+
+	private isAxiosError(candidate: unknown): candidate is AxiosError {
+		return !!candidate && typeof candidate === 'object' && 'isAxiosError' in candidate;
 	}
 }

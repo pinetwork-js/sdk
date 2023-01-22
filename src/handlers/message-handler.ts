@@ -27,11 +27,20 @@ interface PreparePaymentFlowRequestPayload {
 	connectedNetwork: APIPaymentNetwork;
 }
 
+export type PaymentError =
+	| 'horizon_failure'
+	| 'invalid_input'
+	| 'missing_wallet'
+	| 'not_approved_payment'
+	| 'pending_check_failed'
+	| 'pending_payment'
+	| 'stale_payment';
+
 interface ShowPrePaymentErrorRequestPayload {
 	/**
 	 * The payment error
 	 */
-	paymentError: any;
+	paymentError: PaymentError;
 }
 
 interface StartPaymentFlowRequestPayload {
@@ -244,12 +253,12 @@ interface BaseResponseMessage {
 	/**
 	 * The id of the message
 	 */
-	id: number;
+	id?: number;
 }
 
 export type ResponseMessage<T extends MessageType> = ResponseMessagePayload<T> extends void
 	? BaseResponseMessage
-	: BaseResponseMessage & {
+	: Required<BaseResponseMessage> & {
 			/**
 			 * The payload of the message
 			 */
@@ -258,7 +267,7 @@ export type ResponseMessage<T extends MessageType> = ResponseMessagePayload<T> e
 
 interface PromiseLike {
 	resolve: <T extends MessageType>(message: ResponseMessage<T>) => void;
-	reject: (reason?: any) => void;
+	reject: (reason?: unknown) => void;
 }
 
 /**
@@ -328,7 +337,7 @@ export class MessageHandler {
 	 * @param event - The message event received
 	 */
 	public static handleIncomingMessage(event: MessageEvent): void {
-		let parsedData: any;
+		let parsedData: BaseResponseMessage = {};
 
 		try {
 			if (typeof event.data !== 'string') {
@@ -339,7 +348,7 @@ export class MessageHandler {
 
 			parsedData = JSON.parse(event.data);
 
-			if (parsedData.id === null) {
+			if (parsedData.id === undefined) {
 				throw new Error('No id found in message response');
 			}
 
@@ -349,27 +358,21 @@ export class MessageHandler {
 				throw new Error(`No emitted promise found for native messaging response id ${parsedData.id}`);
 			}
 
+			// @ts-expect-error parsedData.id is not undefined, but it says it is
 			MessageHandler.emittedPromises[parsedData.id].resolve(parsedData);
 			delete MessageHandler.emittedPromises[parsedData.id];
 		} catch (error) {
-			if (parsedData.id === null) {
-				console.error(
-					// eslint-disable-next-line max-len
-					'Native messaging: error when handling incoming message (possible response?). Error is logged below.',
-				);
-				console.error(error);
-				console.error(event.data);
-
-				return;
-			}
-
 			console.error(
-				`Native messaging: error when handling response for message id ${parsedData.id}. Error is logged below.`,
+				`Native messaging: error when handling ${
+					parsedData.id === undefined
+						? `incoming message (possible response?)`
+						: `response for message id ${parsedData.id}`
+				}. Error is logged below.`,
 			);
 			console.error(error);
 			console.error(event.data);
 
-			if (parsedData.id in MessageHandler.emittedPromises) {
+			if (parsedData.id && parsedData.id in MessageHandler.emittedPromises) {
 				MessageHandler.emittedPromises[parsedData.id].reject(error);
 			}
 		}

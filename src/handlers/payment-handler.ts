@@ -1,8 +1,9 @@
 import type { APIPartialPayment, APIPayment, APIPaymentNetwork, APIPaymentTransaction } from '@pinetwork-js/api-typing';
 import { createUserToAppPayment, getIncompleteClientPayment } from '@pinetwork-js/api-typing';
+import type { AxiosError } from 'axios';
 import { MessageType } from '../message-types';
 import { sleep } from '../util';
-import type { PaymentStatus } from './message-handler';
+import type { PaymentError, PaymentStatus } from './message-handler';
 import { MessageHandler } from './message-handler';
 import { RequestHandler } from './request-handler';
 
@@ -124,13 +125,13 @@ export class PaymentHandler {
 
 		const payment = await RequestHandler.getInstance()
 			.post(createUserToAppPayment, this.paymentData)
-			.catch((error) => {
+			.catch((requestError: AxiosError<{ error: PaymentError }>) => {
 				MessageHandler.sendSDKMessage({
 					type: MessageType.SHOW_PRE_PAYMENT_ERROR,
-					payload: { paymentError: error.response.data.error },
+					payload: { paymentError: requestError.response!.data.error },
 				});
 
-				this.callbacks.onError(error);
+				this.callbacks.onError(requestError);
 			});
 
 		if (!payment) {
