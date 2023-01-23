@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.4.0...v0.5.0) (2023-01-23)
+
+
+### Features
+
+* add copyText method ([81aff42](https://www.github.com/PiNetwork-js/sdk/commit/81aff4226016f5596916843a4228773d803c5087))
+* add requestPermission method ([5259a12](https://www.github.com/PiNetwork-js/sdk/commit/5259a127644149b05c0255662e2eb0da41cbf47c))
+
+
+### Bug Fixes
+
+* better error handling and types ([b8f71e5](https://www.github.com/PiNetwork-js/sdk/commit/b8f71e59d52bf82a2d8437c95d2e3a0ea565939a))
+* TypeScript configuration and different types ([7e2a569](https://www.github.com/PiNetwork-js/sdk/commit/7e2a56907734adf9af56c6b39ee4715d7064d22a))
+* User to App payment creation route and type ([e7c7e87](https://www.github.com/PiNetwork-js/sdk/commit/e7c7e87db92830f4c066110b0888955cbbbd683a))
+
 ## [0.4.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.3.1...v0.4.0) (2022-08-03)
 
 
