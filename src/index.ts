@@ -3,9 +3,9 @@ import { PiClient } from './pi-client';
 export const Pi = new PiClient();
 
 declare global {
-    interface Window {
-      Pi: PiClient;
-    }
+	interface Window {
+		Pi: PiClient;
+	}
 }
 
 window.Pi = Pi;

@@ -1,4 +1,4 @@
-import type { APIPayment, APIPaymentNetwork, APIUserScopes } from '@pinetwork-js/api-typing';
+import type { APIPayment, APIUserScopes } from '@pinetwork-js/api-typing';
 import type { MessageType } from '../message-types';
 
 interface OpenShareDialogRequestPayload {
@@ -18,13 +18,6 @@ interface OpenAppConversationRequestPayload {
 	 * The conversation id
 	 */
 	conversationId: number;
-}
-
-interface PreparePaymentFlowRequestPayload {
-	/**
-	 * The network to which the application is connected
-	 */
-	connectedNetwork: APIPaymentNetwork;
 }
 
 export type PaymentError =
@@ -86,8 +79,6 @@ type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_A
 	? OpenAppConversationRequestPayload
 	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
 	? OpenShareDialogRequestPayload
-	: T extends MessageType.PREPARE_PAYMENT_FLOW
-	? PreparePaymentFlowRequestPayload
 	: T extends MessageType.SHOW_PRE_PAYMENT_ERROR
 	? ShowPrePaymentErrorRequestPayload
 	: T extends MessageType.START_PAYMENT_FLOW
@@ -206,13 +197,6 @@ interface DecidalCallbackRetrialResponsePayload {
 	retry: boolean;
 }
 
-interface GetConnectNetworkResponsePayload {
-	/**
-	 * The network to which the application is connected
-	 */
-	network: APIPaymentNetwork;
-}
-
 interface CopyTextFromTPAResponsePayload {
 	/**
 	 * Whether or not the text was successfully copied
@@ -241,8 +225,6 @@ type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMU
 	? CheckNativeFeaturesResponsePayload
 	: T extends MessageType.DECIDE_CALLBACK_RETRIAL
 	? DecidalCallbackRetrialResponsePayload
-	: T extends MessageType.GET_CONNECT_NETWORK
-	? GetConnectNetworkResponsePayload
 	: T extends MessageType.COPY_TEXT_FROM_TPA
 	? CopyTextFromTPAResponsePayload
 	: T extends MessageType.REQUEST_NATIVE_PERMISSION

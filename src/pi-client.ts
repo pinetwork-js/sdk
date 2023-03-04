@@ -1,10 +1,4 @@
-import type {
-	APIPartialPayment,
-	APIPayment,
-	APIPaymentNetwork,
-	APIUser,
-	APIUserScopes,
-} from '@pinetwork-js/api-typing';
+import type { APIPartialPayment, APIPayment, APIUser, APIUserScopes } from '@pinetwork-js/api-typing';
 import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing';
 import type { PaymentCallbacks, Permission } from './handlers';
 import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
@@ -64,11 +58,6 @@ export class PiClient {
 	public consentedScopes: APIUserScopes[] = [];
 
 	/**
-	 * The network to which the application is connected
-	 */
-	public connectedNetwork?: APIPaymentNetwork;
-
-	/**
 	 * Callback function triggered if an incomplete payment is found during the process of
 	 * authentication or payment creation
 	 */
@@ -91,7 +80,6 @@ export class PiClient {
 		this.initTracking();
 
 		this.initialized = true;
-		this.connectedNetwork = await this.getConnectedNetwork();
 	}
 
 	/**
@@ -163,11 +151,7 @@ export class PiClient {
 			throw new Error('Cannot create a payment without "payments" scope');
 		}
 
-		if (!this.connectedNetwork) {
-			throw new Error('Connected network cannot be found');
-		}
-
-		return new PaymentHandler(this.connectedNetwork, paymentData, callbacks, this.onIncompletePaymentFound);
+		return new PaymentHandler(paymentData, callbacks, this.onIncompletePaymentFound);
 	}
 
 	/**
@@ -276,18 +260,5 @@ export class PiClient {
 		}
 
 		throw new Error('Pi Network SDK was not initialized. Call init() before any other method.');
-	}
-
-	/**
-	 * Get the network to which the application is connected
-	 */
-	private async getConnectedNetwork(): Promise<APIPaymentNetwork | undefined> {
-		const connectedNetworkMessage = await MessageHandler.sendSDKMessage({ type: MessageType.GET_CONNECT_NETWORK });
-
-		if (!connectedNetworkMessage) {
-			return;
-		}
-
-		return connectedNetworkMessage.payload.network;
 	}
 }

@@ -1,4 +1,4 @@
-import type { APIPartialPayment, APIPayment, APIPaymentNetwork, APIPaymentTransaction } from '@pinetwork-js/api-typing';
+import type { APIPartialPayment, APIPayment, APIPaymentTransaction } from '@pinetwork-js/api-typing';
 import { createUserToAppPayment, getIncompleteClientPayment } from '@pinetwork-js/api-typing';
 import type { AxiosError } from 'axios';
 import { MessageType } from '../message-types';
@@ -39,11 +39,6 @@ export class PaymentHandler {
 	public retryCounter = 5;
 
 	public constructor(
-		/**
-		 * The network to which the application is connected
-		 */
-		public readonly connectedNetwork: APIPaymentNetwork,
-
 		/**
 		 * Information about the payment
 		 */
@@ -102,7 +97,6 @@ export class PaymentHandler {
 	public async runPaymentFlow(): Promise<void> {
 		const paymentMessage = await MessageHandler.sendSDKMessage({
 			type: MessageType.PREPARE_PAYMENT_FLOW,
-			payload: { connectedNetwork: this.connectedNetwork },
 		}).catch((error) => this.callbacks.onError(error));
 
 		if (!paymentMessage) {
