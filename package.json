@@ -12,7 +12,7 @@
 		"format": "prettier 'src/**/**.{js,ts}' --write",
 		"format:check": "prettier 'src/**/**.{js,ts}' --check"
 	},
-	"packageManager": "yarn@3.3.1",
+	"packageManager": "yarn@3.5.0",
 	"author": "Brewal Derouet <brewal_derouet@hotmail.fr>",
 	"license": "PiOS",
 	"repository": {
