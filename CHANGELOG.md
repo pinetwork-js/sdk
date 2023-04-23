@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.0](https://www.github.com/pinetwork-js/sdk/compare/v0.5.0...v0.6.0) (2023-04-23)
+
+
+### Features
+
+* add openUrlInSystemBrowser method ([f1de986](https://www.github.com/pinetwork-js/sdk/commit/f1de9862de6aa2ee5c6814107fe5ea93efaa07e2))
+* add Pi client to window object ([a6574b1](https://www.github.com/pinetwork-js/sdk/commit/a6574b1d7e223cbff1b1d3184f59a1627d3abe7b))
+* add preferred_language scope ([0c1ad0d](https://www.github.com/pinetwork-js/sdk/commit/0c1ad0d6671e2794274716087c006bbeff5597b4))
+* remove connected network ([8b19fd7](https://www.github.com/pinetwork-js/sdk/commit/8b19fd7432e5b6867e1b3dd69b36e4a273dffbf5))
+
 ## [0.5.0](https://www.github.com/PiNetwork-js/sdk/compare/v0.4.0...v0.5.0) (2023-01-23)
 
 
