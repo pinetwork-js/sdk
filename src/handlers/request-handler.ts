@@ -1,40 +1,9 @@
-import type { Route, RoutePayload, RouteResult } from '@pinetwork-js/api-typing';
+import { type Route, type RoutePayload, type RouteResult, postNetworkError } from '@pinetwork-js/api-typing';
 import type { AxiosError, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import { MessageType } from '../message-types';
 import { getDateTime } from '../util/get-time';
 import type { CommunicationInformationResponsePayload, RequestMessage } from './message-handler';
-
-interface NetworkError {
-	/**
-	 * The date when the error occurred
-	 */
-	time: string;
-
-	/**
-	 * The action that was running when the error occurred
-	 */
-	call: string;
-
-	/**
-	 * A message about the error
-	 */
-	message: string;
-
-	/**
-	 * Some information returned by the error
-	 */
-	data: unknown;
-}
-
-interface RESTPostNetworkErrorJSONBody {
-	/**
-	 * The error to send to the API
-	 */
-	error: NetworkError;
-}
-
-const postNetworkError = '/network/error' as Route<undefined, RESTPostNetworkErrorJSONBody>;
 
 /**
  * Handler for requests
