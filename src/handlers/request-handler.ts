@@ -2,7 +2,7 @@ import { type Route, type RoutePayload, type RouteResult, postNetworkError } fro
 import axios, { type AxiosError, type AxiosInstance, type RawAxiosRequestConfig } from 'axios';
 import { MessageType } from '../message-types';
 import { getDateTime } from '../util';
-import type { CommunicationInformationResponsePayload, RequestMessage } from './message-handler';
+import type { CommunicationInformationResponsePayload, RequestMessage } from '../types';
 
 /**
  * Handler for requests

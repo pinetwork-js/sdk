@@ -1,37 +1,15 @@
 import {
 	type APIPartialPayment,
 	type APIPayment,
-	type APIPaymentTransaction,
 	createUserToAppPayment,
 	getIncompleteClientPayment,
 } from '@pinetwork-js/api-typing';
 import type { AxiosError } from 'axios';
-import { MessageType } from '../message-types';
 import { sleep } from '../util';
-import { type PaymentError, type PaymentStatus, MessageHandler } from './message-handler';
+import type { PaymentCallbacks, PaymentError, PaymentStatus } from '../types';
+import { MessageType } from '../message-types';
+import { MessageHandler } from './message-handler';
 import { RequestHandler } from './request-handler';
-
-export interface PaymentCallbacks {
-	/**
-	 * Callback function triggered when a payment is ready to be approved by the server
-	 */
-	onReadyForServerApproval: (paymentId: APIPayment['identifier']) => void;
-
-	/**
-	 * Callback function triggered when a payment is ready to be completed by the server
-	 */
-	onReadyForServerCompletion: (paymentId: APIPayment['identifier'], txid: APIPaymentTransaction['txid']) => void;
-
-	/**
-	 * Callback function triggered when a payment is cancelled
-	 */
-	onCancel: (paymentId: APIPayment['identifier']) => void;
-
-	/**
-	 * Callback function triggered when an error occurs
-	 */
-	onError: (error: Error, payment?: APIPayment) => void;
-}
 
 /**
  * Handler for payments

@@ -1,18 +1,18 @@
 import {
 	type APIPartialPayment,
 	type APIPayment,
-	type APIUser,
 	type APIUserScopes,
 	getAuthenticatedUser,
 	trackUsage,
 } from '@pinetwork-js/api-typing';
-import { type PaymentCallbacks, type Permission, MessageHandler, PaymentHandler, RequestHandler } from './handlers';
+import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
 import { MessageType } from './message-types';
+import type { AuthResult, ClientInitOptions, PaymentCallbacks, Permission } from './types';
 
 /**
  * Available SDK versions
  */
-const versions = ['2.0'] as const;
+export const versions = ['2.0'] as const;
 
 /**
  * Available Pi Platform API scopes
@@ -25,30 +25,6 @@ const availableScopes = new Set<APIUserScopes>([
 	'wallet_address',
 	'preferred_language',
 ]);
-
-interface ClientInitOptions {
-	/**
-	 * The version of the SDK
-	 */
-	version: (typeof versions)[number];
-
-	/**
-	 * Whether the application is executed in the Pi Network sandbox
-	 */
-	sandbox?: boolean;
-}
-
-export interface AuthResult {
-	/**
-	 * The application access token
-	 */
-	accessToken: string;
-
-	/**
-	 * The authenticated user
-	 */
-	user: APIUser;
-}
 
 /**
  * Main class of the SDK
