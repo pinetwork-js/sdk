@@ -1,10 +1,14 @@
-import type { APIPartialPayment, APIPayment, APIPaymentTransaction } from '@pinetwork-js/api-typing';
-import { createUserToAppPayment, getIncompleteClientPayment } from '@pinetwork-js/api-typing';
+import {
+	type APIPartialPayment,
+	type APIPayment,
+	type APIPaymentTransaction,
+	createUserToAppPayment,
+	getIncompleteClientPayment,
+} from '@pinetwork-js/api-typing';
 import type { AxiosError } from 'axios';
 import { MessageType } from '../message-types';
 import { sleep } from '../util';
-import type { PaymentError, PaymentStatus } from './message-handler';
-import { MessageHandler } from './message-handler';
+import { type PaymentError, type PaymentStatus, MessageHandler } from './message-handler';
 import { RequestHandler } from './request-handler';
 
 export interface PaymentCallbacks {

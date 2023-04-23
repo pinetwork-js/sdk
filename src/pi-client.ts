@@ -1,7 +1,12 @@
-import type { APIPartialPayment, APIPayment, APIUser, APIUserScopes } from '@pinetwork-js/api-typing';
-import { getAuthenticatedUser, trackUsage } from '@pinetwork-js/api-typing';
-import type { PaymentCallbacks, Permission } from './handlers';
-import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
+import {
+	type APIPartialPayment,
+	type APIPayment,
+	type APIUser,
+	type APIUserScopes,
+	getAuthenticatedUser,
+	trackUsage,
+} from '@pinetwork-js/api-typing';
+import { type PaymentCallbacks, type Permission, MessageHandler, PaymentHandler, RequestHandler } from './handlers';
 import { MessageType } from './message-types';
 
 /**

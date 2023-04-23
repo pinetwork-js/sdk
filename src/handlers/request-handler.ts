@@ -1,8 +1,7 @@
 import { type Route, type RoutePayload, type RouteResult, postNetworkError } from '@pinetwork-js/api-typing';
-import type { AxiosError, AxiosInstance, RawAxiosRequestConfig } from 'axios';
-import axios from 'axios';
+import axios, { type AxiosError, type AxiosInstance, type RawAxiosRequestConfig } from 'axios';
 import { MessageType } from '../message-types';
-import { getDateTime } from '../util/get-time';
+import { getDateTime } from '../util';
 import type { CommunicationInformationResponsePayload, RequestMessage } from './message-handler';
 
 /**
