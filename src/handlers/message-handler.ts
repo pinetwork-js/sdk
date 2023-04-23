@@ -75,6 +75,13 @@ interface RequestNativePermissionPayload {
 	permission: Permission;
 }
 
+interface OpenUrlInSystemBrowserPayload {
+	/**
+	 * The url to open
+	 */
+	url: string;
+}
+
 type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_APP_CONVERSATION_WITH_ID
 	? OpenAppConversationRequestPayload
 	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
@@ -91,6 +98,8 @@ type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_A
 	? CopyTextFromTPAPayload
 	: T extends MessageType.REQUEST_NATIVE_PERMISSION
 	? RequestNativePermissionPayload
+	: T extends MessageType.OPEN_URL_IN_SYSTEM_BROWSER
+	? OpenUrlInSystemBrowserPayload
 	: void;
 
 interface BaseRequestMessage {
@@ -211,6 +220,26 @@ interface RequestNativePermissionResponsePayload {
 	granted: boolean | null;
 }
 
+/* eslint-disable @typescript-eslint/sort-type-union-intersection-members */
+type OpenUrlInSystemBrowserResponsePayload =
+	| {
+			/**
+			 * Whether or not the url was successfully opened
+			 */
+			success: true;
+	  }
+	| {
+			/**
+			 * Whether or not the url was successfully opened
+			 */
+			success: false;
+
+			/**
+			 * The error message
+			 */
+			message: string;
+	  };
+
 type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
 	? CommunicationInformationResponsePayload
 	: T extends MessageType.PREPARE_PAYMENT_FLOW
@@ -229,6 +258,8 @@ type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMU
 	? CopyTextFromTPAResponsePayload
 	: T extends MessageType.REQUEST_NATIVE_PERMISSION
 	? RequestNativePermissionResponsePayload
+	: T extends MessageType.OPEN_URL_IN_SYSTEM_BROWSER
+	? OpenUrlInSystemBrowserResponsePayload
 	: void;
 
 interface BaseResponseMessage {

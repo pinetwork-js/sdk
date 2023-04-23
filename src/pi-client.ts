@@ -236,6 +236,28 @@ export class PiClient {
 	}
 
 	/**
+	 * Open the given url in system browser
+	 *
+	 * @param url - The url to open
+	 */
+	public async openUrlInSystemBrowser(url: string) {
+		this.checkInitialized();
+
+		const openUrlInSystemBrowserResponse = await MessageHandler.sendSDKMessage({
+			type: MessageType.OPEN_URL_IN_SYSTEM_BROWSER,
+			payload: { url },
+		});
+
+		if (!openUrlInSystemBrowserResponse) {
+			throw new Error('Unexpected error');
+		}
+
+		if (!openUrlInSystemBrowserResponse.payload.success) {
+			throw new Error(openUrlInSystemBrowserResponse.payload.message);
+		}
+	}
+
+	/**
 	 * Initialize the usage tracking system
 	 */
 	private initTracking(): void {

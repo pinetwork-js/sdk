@@ -13,4 +13,5 @@ export enum MessageType {
 	DECIDE_CALLBACK_RETRIAL = '@pi:app:sdk:decide_callback_retrial',
 	COPY_TEXT_FROM_TPA = '@pi:app:sdk:copy_text_from_tpa',
 	REQUEST_NATIVE_PERMISSION = '@pi:app:sdk:request_native_permission',
+	OPEN_URL_IN_SYSTEM_BROWSER = '@pi:app:sdk:open_url_in_system_browser',
 }
