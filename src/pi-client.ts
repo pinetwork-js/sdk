@@ -12,7 +12,14 @@ const versions = ['2.0'] as const;
 /**
  * Available Pi Platform API scopes
  */
-const availableScopes = new Set(['payments', 'username', 'roles', 'platform', 'wallet_address'] as APIUserScopes[]);
+const availableScopes = new Set<APIUserScopes>([
+	'payments',
+	'username',
+	'roles',
+	'platform',
+	'wallet_address',
+	'preferred_language',
+]);
 
 interface ClientInitOptions {
 	/**
