@@ -71,6 +71,11 @@ interface OpenConsentModalResponsePayload {
 	 * Whether or not the user gave his consent for the requested scopes
 	 */
 	cancelled?: boolean;
+
+	/**
+	 * Whether or not PiNet support this action
+	 */
+	pinet_unsupported: boolean;
 }
 
 type NativeFeature = 'inline_media' | 'request_permission';
@@ -80,6 +85,11 @@ interface CheckNativeFeaturesResponsePayload {
 	 * List of native features available in client platform
 	 */
 	features: NativeFeature[];
+
+	/**
+	 * Whether or not PiNet support this action
+	 */
+	pinet_unsupported: boolean;
 }
 
 interface DecidalCallbackRetrialResponsePayload {
@@ -94,6 +104,11 @@ interface CopyTextFromTPAResponsePayload {
 	 * Whether or not the text was successfully copied
 	 */
 	success: boolean;
+
+	/**
+	 * Whether or not PiNet support this action
+	 */
+	pinet_unsupported: boolean;
 }
 
 interface RequestNativePermissionResponsePayload {
@@ -101,6 +116,11 @@ interface RequestNativePermissionResponsePayload {
 	 * Whether or not the requested permission has been granted
 	 */
 	granted: boolean | null;
+
+	/**
+	 * Whether or not PiNet support this action
+	 */
+	pinet_unsupported: boolean;
 }
 
 /* eslint-disable @typescript-eslint/sort-type-constituents */
@@ -120,8 +140,27 @@ type OpenUrlInSystemBrowserResponsePayload =
 			/**
 			 * The error message
 			 */
-			message: string;
+			message?: string;
+
+			/**
+			 * Whether or not PiNet support this action
+			 */
+			pinet_unsupported: boolean;
 	  };
+
+interface OpenShareDialogResponsePayload {
+	/**
+	 * Whether or not PiNet support this action
+	 */
+	pinet_unsupported: boolean;
+}
+
+interface OpenAppConversationResponsePayload {
+	/**
+	 * Whether or not PiNet support this action
+	 */
+	pinet_unsupported: boolean;
+}
 
 type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMUNICATION_INFORMATION_REQUEST
 	? CommunicationInformationResponsePayload
@@ -143,6 +182,10 @@ type ResponseMessagePayload<T extends MessageType> = T extends MessageType.COMMU
 	? RequestNativePermissionResponsePayload
 	: T extends MessageType.OPEN_URL_IN_SYSTEM_BROWSER
 	? OpenUrlInSystemBrowserResponsePayload
+	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
+	? OpenShareDialogResponsePayload
+	: T extends MessageType.OPEN_APP_CONVERSATION_WITH_ID
+	? OpenAppConversationResponsePayload
 	: void;
 
 export interface BaseResponseMessage {

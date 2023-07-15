@@ -7,7 +7,9 @@ import {
 } from '@pinetwork-js/api-typing';
 import { MessageHandler, PaymentHandler, RequestHandler } from './handlers';
 import { MessageType } from './message-types';
-import type { AuthResult, ClientInitOptions, PaymentCallbacks, Permission } from './types';
+import type { AuthResult, ClientInitOptions, PaymentCallbacks, Permission, PiHostApp } from './types';
+import { PINET_REGEX } from './util';
+import { getLocationTracker } from './util/get-mutation-observer';
 
 /**
  * Available SDK versions
@@ -25,6 +27,11 @@ const availableScopes = new Set<APIUserScopes>([
 	'wallet_address',
 	'preferred_language',
 ]);
+
+/**
+ * The MutationObserver used to track the location of the user
+ */
+let locationTracker: MutationObserver | undefined;
 
 /**
  * Main class of the SDK
@@ -65,6 +72,12 @@ export class PiClient {
 			MessageHandler.setSandboxMode(true);
 		}
 
+		if (this.getPiHostApp() === 'pi-net') {
+			locationTracker ??= getLocationTracker();
+
+			locationTracker.observe(document.body, { childList: true, subtree: true });
+		}
+
 		this.initTracking();
 
 		this.initialized = true;
@@ -96,6 +109,10 @@ export class PiClient {
 
 		if (!scopeConsentResult || scopeConsentResult.payload.cancelled) {
 			throw new Error('User consent cancelled.');
+		}
+
+		if (scopeConsentResult.payload.pinet_unsupported) {
+			throw new Error('Method unsupported in PiNet.');
 		}
 
 		const applicationInformationMessage = await MessageHandler.sendSDKMessage({
@@ -135,6 +152,10 @@ export class PiClient {
 	public createPayment(paymentData: APIPartialPayment, callbacks: PaymentCallbacks): PaymentHandler {
 		this.checkInitialized();
 
+		if (this.getPiHostApp() === 'pi-net') {
+			throw new Error('Method unsupported in PiNet.');
+		}
+
 		if (!this.consentedScopes.includes('payments')) {
 			throw new Error('Cannot create a payment without "payments" scope');
 		}
@@ -148,13 +169,17 @@ export class PiClient {
 	 * @param title - The title of the message
 	 * @param sharingMessage - The message to share
 	 */
-	public openShareDialog(title: string, sharingMessage: string): void {
+	public async openShareDialog(title: string, sharingMessage: string): Promise<void> {
 		this.checkInitialized();
 
-		MessageHandler.sendSDKMessage({
+		const openShareDialogResult = await MessageHandler.sendSDKMessage({
 			type: MessageType.OPEN_SHARE_DIALOG_ACTION,
 			payload: { title, sharingMessage },
 		});
+
+		if (openShareDialogResult?.payload.pinet_unsupported) {
+			throw new Error('Method unsupported in PiNet.');
+		}
 	}
 
 	/**
@@ -162,13 +187,17 @@ export class PiClient {
 	 *
 	 * @param conversationId - The conversation id
 	 */
-	public openConversation(conversationId: number): void {
+	public async openConversation(conversationId: number): Promise<void> {
 		this.checkInitialized();
 
-		MessageHandler.sendSDKMessage({
+		const openAppConversationResult = await MessageHandler.sendSDKMessage({
 			type: MessageType.OPEN_APP_CONVERSATION_WITH_ID,
 			payload: { conversationId },
 		});
+
+		if (openAppConversationResult?.payload.pinet_unsupported) {
+			throw new Error('Method unsupported in PiNet.');
+		}
 	}
 
 	/**
@@ -185,6 +214,10 @@ export class PiClient {
 			return [];
 		}
 
+		if (nativeFeaturesList.payload.pinet_unsupported) {
+			throw new Error('Method unsupported in PiNet.');
+		}
+
 		return nativeFeaturesList.payload.features;
 	}
 
@@ -196,7 +229,14 @@ export class PiClient {
 	public async copyText(text: string) {
 		this.checkInitialized();
 
-		await MessageHandler.sendSDKMessage({ type: MessageType.COPY_TEXT_FROM_TPA, payload: { text } });
+		const copyTextResult = await MessageHandler.sendSDKMessage({
+			type: MessageType.COPY_TEXT_FROM_TPA,
+			payload: { text },
+		});
+
+		if (copyTextResult?.payload.pinet_unsupported) {
+			throw new Error('Method unsupported in PiNet.');
+		}
 	}
 
 	/**
@@ -212,6 +252,10 @@ export class PiClient {
 			type: MessageType.REQUEST_NATIVE_PERMISSION,
 			payload: { permission },
 		});
+
+		if (requestPermissionResponse?.payload.pinet_unsupported) {
+			throw new Error('Method unsupported in PiNet.');
+		}
 
 		return !!requestPermissionResponse?.payload.granted;
 	}
@@ -233,8 +277,32 @@ export class PiClient {
 			throw new Error('Unexpected error');
 		}
 
-		if (!openUrlInSystemBrowserResponse.payload.success) {
-			throw new Error(openUrlInSystemBrowserResponse.payload.message);
+		if (openUrlInSystemBrowserResponse.payload.success) {
+			return;
+		}
+
+		if (openUrlInSystemBrowserResponse.payload.pinet_unsupported) {
+			throw new Error('Method unsupported in PiNet.');
+		}
+
+		throw new Error(openUrlInSystemBrowserResponse.payload.message);
+	}
+
+	/**
+	 * Get the Pi Network hosting app behind the current app
+	 *
+	 * @returns The Pi Network hosting app
+	 */
+	public getPiHostApp(): PiHostApp {
+		const { referrer } = document;
+		const { userAgent } = window.navigator;
+
+		if (referrer.startsWith('https://app-cdn.minepi.com')) {
+			return userAgent.includes('PiBrowser') ? 'pi-browser' : 'pi-app';
+		}
+
+		if (PINET_REGEX.test(referrer)) {
+			return 'pi-net';
 		}
 	}
 

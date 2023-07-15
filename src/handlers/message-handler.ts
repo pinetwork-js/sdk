@@ -1,4 +1,5 @@
 import type { BaseResponseMessage, MessagePromise, RequestMessage, ResponseMessage } from '../types';
+import { PINET_REGEX } from '../util';
 
 /**
  * Handler for messages
@@ -23,7 +24,13 @@ export class MessageHandler {
 	 * @returns the host platform URL of the application
 	 */
 	public static getHostPlatformURL(): string {
-		return MessageHandler.sandboxMode ? 'https://sandbox.minepi.com' : 'https://app-cdn.minepi.com';
+		if (MessageHandler.sandboxMode) {
+			return 'https://sandbox.minepi.com';
+		}
+
+		const [, pinetApp] = document.referrer.match(PINET_REGEX) ?? [];
+
+		return pinetApp ? `https://${pinetApp}.pinet.com` : 'https://app-cdn.minepi.com';
 	}
 
 	/**

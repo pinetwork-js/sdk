@@ -82,6 +82,13 @@ interface OpenUrlInSystemBrowserPayload {
 	url: string;
 }
 
+interface TrackLocationPayload {
+	/**
+	 * The location object
+	 */
+	location: object;
+}
+
 type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_APP_CONVERSATION_WITH_ID
 	? OpenAppConversationRequestPayload
 	: T extends MessageType.OPEN_SHARE_DIALOG_ACTION
@@ -100,6 +107,8 @@ type RequestMessagePayload<T extends MessageType> = T extends MessageType.OPEN_A
 	? RequestNativePermissionPayload
 	: T extends MessageType.OPEN_URL_IN_SYSTEM_BROWSER
 	? OpenUrlInSystemBrowserPayload
+	: T extends MessageType.TRACK_LOCATION
+	? TrackLocationPayload
 	: void;
 
 interface BaseRequestMessage {
