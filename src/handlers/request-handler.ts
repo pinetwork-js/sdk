@@ -1,7 +1,7 @@
 import { type Route, type RoutePayload, type RouteResult, postNetworkError } from '@pinetwork-js/api-typing';
 import axios, { type AxiosError, type AxiosInstance, type RawAxiosRequestConfig } from 'axios';
 import { MessageType } from '../message-types';
-import { getDateTime } from '../util';
+import { DEBUG, getDateTime } from '../util';
 import type { CommunicationInformationResponsePayload, RequestMessage } from '../types';
 
 /**
@@ -78,7 +78,9 @@ export class RequestHandler {
 	public handleError(error: AxiosError): void {
 		const errorCode = error.response?.status;
 
-		console.error(error);
+		if (DEBUG) {
+			console.error(error);
+		}
 
 		this.sendMessageToPiNetwork({
 			type: errorCode !== 401 && errorCode !== 403 ? MessageType.UNKNOWN_ERROR : MessageType.AUTH_ERROR,
@@ -155,7 +157,9 @@ export class RequestHandler {
 	 */
 	public waitForAction<M extends RequestMessage<M['type']>>(awaitedMessage: M): Promise<M> {
 		return new Promise((resolve, reject) => {
-			console.log('Waiting for action...');
+			if (DEBUG) {
+				console.log('Waiting for action...');
+			}
 
 			const timeout = window.setTimeout(() => {
 				reject(new Error('timeout'));
@@ -191,15 +195,21 @@ export class RequestHandler {
 		try {
 			parsedData = JSON.parse(event.data);
 		} catch {
-			console.warn('Error while parsing request', event, event.data);
+			if (DEBUG) {
+				console.warn('Error while parsing request', event, event.data);
+			}
 
 			return;
 		}
 
-		console.log('Message!', parsedData);
+		if (DEBUG) {
+			console.log('Message!', parsedData);
+		}
 
 		if (!parsedData) {
-			console.warn('Unable to parse action');
+			if (DEBUG) {
+				console.warn('Unable to parse action');
+			}
 
 			return;
 		}

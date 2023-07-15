@@ -1,5 +1,5 @@
 import type { BaseResponseMessage, MessagePromise, RequestMessage, ResponseMessage } from '../types';
-import { PINET_REGEX } from '../util';
+import { DEBUG, PINET_REGEX } from '../util';
 
 /**
  * Handler for messages
@@ -53,7 +53,9 @@ export class MessageHandler {
 		const messageToSend = { id, ...message };
 		const hostPlatformURL = MessageHandler.getHostPlatformURL();
 
-		console.log(`Sending message to app platform (target origin: ${hostPlatformURL}):`, messageToSend);
+		if (DEBUG) {
+			console.log(`Sending message to app platform (target origin: ${hostPlatformURL}):`, messageToSend);
+		}
 
 		window.parent.postMessage(JSON.stringify(messageToSend), hostPlatformURL);
 
@@ -61,7 +63,9 @@ export class MessageHandler {
 			MessageHandler.emittedPromises[id] = { resolve, reject };
 
 			setTimeout(() => {
-				console.error(`Messaging promise with id ${id} timed out after 120000ms.`);
+				if (DEBUG) {
+					console.error(`Messaging promise with id ${id} timed out after 120000ms.`);
+				}
 
 				reject();
 			}, 120_000);
@@ -78,7 +82,9 @@ export class MessageHandler {
 
 		try {
 			if (typeof event.data !== 'string') {
-				console.log('Received message with non-string data:', event.data);
+				if (DEBUG) {
+					console.log('Received message with non-string data:', event.data);
+				}
 
 				return;
 			}
@@ -89,7 +95,9 @@ export class MessageHandler {
 				throw new Error('No id found in message response');
 			}
 
-			console.log(`Received response for message id ${parsedData.id}:`, parsedData);
+			if (DEBUG) {
+				console.log(`Received response for message id ${parsedData.id}:`, parsedData);
+			}
 
 			if (!(parsedData.id in MessageHandler.emittedPromises)) {
 				throw new Error(`No emitted promise found for native messaging response id ${parsedData.id}`);
@@ -99,15 +107,17 @@ export class MessageHandler {
 			MessageHandler.emittedPromises[parsedData.id].resolve(parsedData);
 			delete MessageHandler.emittedPromises[parsedData.id];
 		} catch (error) {
-			console.error(
-				`Native messaging: error when handling ${
-					parsedData.id === undefined
-						? `incoming message (possible response?)`
-						: `response for message id ${parsedData.id}`
-				}. Error is logged below.`,
-			);
-			console.error(error);
-			console.error(event.data);
+			if (DEBUG) {
+				console.error(
+					`Native messaging: error when handling ${
+						parsedData.id === undefined
+							? `incoming message (possible response?)`
+							: `response for message id ${parsedData.id}`
+					}. Error is logged below.`,
+				);
+				console.error(error);
+				console.error(event.data);
+			}
 
 			if (parsedData.id && parsedData.id in MessageHandler.emittedPromises) {
 				MessageHandler.emittedPromises[parsedData.id].reject(error);
