@@ -8,7 +8,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2
+      - uses: GoogleCloudPlatform/release-please-action@v3
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -23,13 +23,13 @@ jobs:
             Refactoring","hidden":true},{"type":"test","section":"Tests","hidden":true},{"type":"ci","section":"Continuous
             Integration","hidden":true}]'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ steps.release.outputs.release_created }}
 
-      - name: Use Node.js v18
-        uses: actions/setup-node@v2
+      - name: Use Node.js v20
+        uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
           registry-url: https://registry.npmjs.org
         if: ${{ steps.release.outputs.release_created }}
 
