@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.0](https://github.com/pinetwork-js/sdk/compare/v0.6.0...v0.7.0) (2023-07-15)
+
+
+### Features
+
+* hide logs behind debug mode ([d045ec1](https://github.com/pinetwork-js/sdk/commit/d045ec15acc273f185d283576dd2efc1efbd0b62))
+* support PiNet platform ([37fd6c6](https://github.com/pinetwork-js/sdk/commit/37fd6c6fb02f52c8074012b86edb724c469cea85))
+
 ## [0.6.0](https://www.github.com/pinetwork-js/sdk/compare/v0.5.0...v0.6.0) (2023-04-23)
 
 
