@@ -103,7 +103,7 @@ interface RequestNativePermissionResponsePayload {
 	granted: boolean | null;
 }
 
-/* eslint-disable @typescript-eslint/sort-type-union-intersection-members */
+/* eslint-disable @typescript-eslint/sort-type-constituents */
 type OpenUrlInSystemBrowserResponsePayload =
 	| {
 			/**

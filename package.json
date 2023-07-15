@@ -3,7 +3,6 @@
 	"description": "Unofficial Pi Network SDK",
 	"version": "0.6.0",
 	"main": "build/index.js",
-	"prettier": "@pinetwork-js/prettier-config",
 	"scripts": {
 		"prepack": "yarn build",
 		"build": "tsc --build --clean && tsc",
@@ -29,12 +28,12 @@
 	"devDependencies": {
 		"@microsoft/tsdoc": "^0.14.2",
 		"@pinetwork-js/api-typing": "^0.7.0",
-		"@pinetwork-js/eslint-config": "^0.2.0",
-		"@pinetwork-js/prettier-config": "^0.1.0",
 		"@types/node": "^20.4.2",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.45.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-airbnb-typescript": "^17.1.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-import-resolver-node": "^0.3.7",
 		"eslint-plugin-import": "^2.27.5",
@@ -42,7 +41,7 @@
 		"eslint-plugin-sonarjs": "^0.19.0",
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"eslint-plugin-unicorn": "^47.0.0",
-		"prettier": "^3.0.0",
+		"prettier": "3.0.0",
 		"typescript": "^5.1.6"
 	},
 	"files": [
