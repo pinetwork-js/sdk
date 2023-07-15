@@ -1,7 +1,7 @@
 {
 	"name": "@pinetwork-js/sdk",
 	"description": "Unofficial Pi Network SDK",
-	"version": "0.6.0",
+	"version": "0.7.0",
 	"main": "build/index.js",
 	"scripts": {
 		"prepack": "yarn build",
